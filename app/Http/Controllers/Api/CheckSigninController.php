@@ -12,7 +12,8 @@ class CheckSigninController extends Controller
     //? Show all
     public function index()
     {
-        $users = CheckSignin::paginate(20);
+        $users = CheckSignin::orderBy('id', 'desc')
+            ->paginate(20);
 
         return response()->json($users, 200);
     }

@@ -14,7 +14,9 @@ class StudentController extends Controller
     //? Show all students
     public function index()
     {
-        $students = Student::where('is_del', false)->paginate(20);
+        $students = Student::where('is_del', false)
+            ->orderBy('id', 'desc')
+            ->paginate(20);
 
         return response()->json($students, 200);
     }
@@ -43,37 +45,60 @@ class StudentController extends Controller
     //? Create new student
     public function store(Request $request)
     {
-        $fields = $request->validate([
-            'citizen_id' => 'required|string|unique:students,citizen_id|max:13',
-            'student_code' => 'required|string|unique:students,student_code|max:10',
-            'name_th' => 'required|string|max:255',
-            'name_en' => 'required|string|max:255',
-            'image_profile' => 'image|mimes:jpeg,png,jpg|max:3584',
-            'email' => 'required|string|email|max:255',
-            'tel_number' => 'required|string|max:255',
-            'province' => 'required|string|max:255',
-            'district' => 'required|string|max:255',
-            'sub_district' => 'required|string|max:255',
-            'postcode' => 'required|string|max:255',
-            'address' => 'required|string|max:255',
-        ]);
+        //? When create new data it'll check if student is exist
+        $dbCheck = Student::where('is_del', true)
+            ->where(function ($query) use ($request) {
+                $query->where('citizen_id', $request->citizen_id)
+                    ->orWhere('student_code', $request->student_code);
+            })
+            ->first();
 
-        //? Upload image
-        if ($request->hasFile('image_profile')) {
-            $image = $request->file('image_profile');
-            $imageName = 'profile-' . time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images/students'), $imageName);
-            $fields['image_profile'] = $imageName;
+        if ($dbCheck) {
+            //? If has data, update is_del to false
+            $dbCheck->update([
+                'is_del' => false,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'status' => 'update',
+                'message' => 'อัพเดตข้อมูลนักศึกษาเรียบร้อย',
+            ]);
+        } else {
+            //? data is not exist, create new data
+            $fields = $request->validate([
+                'citizen_id' => 'required|string|unique:students,citizen_id|max:13',
+                'student_code' => 'required|string|unique:students,student_code|max:10',
+                'name_th' => 'required|string|max:255',
+                'name_en' => 'required|string|max:255',
+                'image_profile' => 'image|mimes:jpeg,png,jpg|max:3584',
+                'email' => 'required|string|email|max:255',
+                'tel_number' => 'required|string|max:255',
+                'province' => 'required|string|max:255',
+                'district' => 'required|string|max:255',
+                'sub_district' => 'required|string|max:255',
+                'postcode' => 'required|string|max:255',
+                'address' => 'required|string|max:255',
+            ]);
+
+            //? Upload image
+            if ($request->hasFile('image_profile')) {
+                $image = $request->file('image_profile');
+                $imageName = 'profile-' . time() . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('images/students'), $imageName);
+                $fields['image_profile'] = $imageName;
+            }
+
+            //? Create student
+            $student = Student::create($fields);
+
+            return response()->json([
+                'success' => true,
+                'status' => 'create',
+                'message' => 'สร้างข้อมูลนักศึกษาเรียบร้อยแล้ว',
+                'data' => $student,
+            ], 201);
         }
-
-        //? Create student
-        $student = Student::create($fields);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'สร้างข้อมูลนักศึกษาเรียบร้อยแล้ว',
-            'data' => $student,
-        ], 201);
     }
 
     //? Update function
@@ -131,6 +156,7 @@ class StudentController extends Controller
                     ->orWhere('name_en', 'LIKE', "%$keyword%")
                     ->orWhere('student_code', 'LIKE', "%$keyword%");
             })
+            ->orderBy('id', 'desc')
             ->paginate(20);
 
         return response()->json($student, 200);

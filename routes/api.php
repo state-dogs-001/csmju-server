@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\PersonnelController;
 use App\Http\Controllers\Api\SubjectController;
 use App\Http\Controllers\Api\BannerController;
 use App\Http\Controllers\Api\SubjectResidualController;
+use App\Http\Controllers\Api\InformationController;
 
 //? Auth route
 Route::post('/auth/signup', [AuthController::class, 'signup']);
@@ -64,11 +65,29 @@ Route::post('/banner/new', [BannerController::class, 'store']);
 Route::post('/banner/update/{id}', [BannerController::class, 'update']);
 Route::post('/banner/delete/{id}', [BannerController::class, 'delete']);
 
-//? News route
+//? News route for web and mobile app
+Route::get('/news/show/{id}', [InformationController::class, 'show']); //? For public
+Route::get('/news/limit/{number}', [InformationController::class, 'newsLimit']); //? Limit
+
+//? News route for web
+Route::get('/news', [InformationController::class, 'index']); //? Paginate (For public)
+Route::get('/news/private', [InformationController::class, 'indexPrivate']); //? Paginate (For private)
+Route::get('/news/show/private/{id}', [InformationController::class, 'showPrivate']); //? For private for dashboard
+Route::get('/news/search/{keyword}', [InformationController::class, 'search']); //? Paginate (For public)
+Route::get('/news/search/private/{keyword}', [InformationController::class, 'searchPrivate']); //? Paginate (For private for dashboard)
+Route::post('/news/new', [InformationController::class, 'store']);
+Route::post('/news/update/{id}', [InformationController::class, 'update']);
+Route::post('/news/delete/{id}', [InformationController::class, 'delete']);
 
 //? News route for mobile app
+Route::get('/news/all', [InformationController::class, 'indexAll']); //? Get all
+Route::get('/news/search/all/{keyword}', [InformationController::class, 'searchAll']); //? Get all
+
+//? Document route
 
 //? Activity route
+
+//? Classroom route
 
 //? Project research route
 

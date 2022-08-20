@@ -33,6 +33,7 @@ class SubjectResidualController extends Controller
                 'subject_residuals.is_del',
             )
             ->where('subject_residuals.is_del', false)
+            ->orderBy('subject_residuals.id', 'desc')
             ->paginate(20);
 
         return response()->json($residuals, 200);

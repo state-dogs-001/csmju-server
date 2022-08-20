@@ -12,7 +12,9 @@ class SubjectController extends Controller
     //? Show all subjects
     public function index()
     {
-        $subjects = Subject::where('is_del', false)->paginate(20);
+        $subjects = Subject::where('is_del', false)
+            ->orderBy('id', 'desc')
+            ->paginate(20);
 
         return response()->json($subjects, 200);
     }
@@ -20,36 +22,66 @@ class SubjectController extends Controller
     //? Show a subject
     public function show($id)
     {
-        $subject = Subject::findOrFail($id);
+        $subject = Subject::where('id', $id)
+            ->where('is_del', false)
+            ->first();
 
-        return response()->json([
-            'success' => true,
-            'data' => $subject
-        ], 200);
+        //? Check if subject is exist
+        if (!$subject) {
+            return response()->json([
+                'success' => false,
+                'message' => 'ไม่พบข้อมูล'
+            ], 404);
+        } else {
+            return response()->json([
+                'success' => true,
+                'data' => $subject
+            ], 200);
+        }
     }
 
     //? Create new subject
     public function store(Request $request)
     {
-        $fields = $request->validate([
-            'subject_code' => 'required|string|max:255',
-            'name_th' => 'required|string|max:255',
-            'name_en' => 'required|string|max:255',
-            'detail' => 'required|string',
-            'credit' => 'required|integer',
-            'theory_hour' => 'required|integer',
-            'practical_hour' => 'required|integer',
-            'self_hour' => 'required|integer',
-            'term' => 'required|integer',
-            'is_show' => 'boolean',
-        ]);
+        //? When create new data it'll check if subject is exist
+        $dbCheck = Subject::where('is_del', true)
+            ->where('subject_code', $request->subject_code)
+            ->first();
 
-        $subject = Subject::create($fields);
+        if ($dbCheck) {
+            //? If has data, update is_del to false
+            $dbCheck->update([
+                'is_del' => false,
+            ]);
 
-        return response()->json([
-            'success' => true,
-            'data' => $subject
-        ], 201);
+            return response()->json([
+                'success' => true,
+                'status' => 'update',
+                'message' => 'อัพเดทข้อมูลรายวิชาเรียบร้อยแล้ว',
+            ], 200);
+        } else {
+            //? If not has data, create new subject
+            $fields = $request->validate([
+                'subject_code' => 'required|string|max:255',
+                'name_th' => 'required|string|max:255',
+                'name_en' => 'required|string|max:255',
+                'detail' => 'required|string',
+                'credit' => 'required|integer',
+                'theory_hour' => 'required|integer',
+                'practical_hour' => 'required|integer',
+                'self_hour' => 'required|integer',
+                'term' => 'required|integer',
+                'is_show' => 'boolean',
+            ]);
+
+            $subject = Subject::create($fields);
+
+            return response()->json([
+                'success' => true,
+                'status' => 'create',
+                'data' => $subject
+            ], 201);
+        }
     }
 
     //? Update a subject
@@ -87,6 +119,7 @@ class SubjectController extends Controller
                     ->orWhere('name_en', 'LIKE', "%$keyword%")
                     ->orWhere('subject_code', 'LIKE', "%$keyword%");
             })
+            ->orderBy('id', 'desc')
             ->paginate(20);
 
         return response()->json($subjects, 200);

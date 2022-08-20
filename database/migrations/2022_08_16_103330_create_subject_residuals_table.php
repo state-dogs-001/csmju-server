@@ -25,7 +25,7 @@ return new class extends Migration
             $table->unsignedBigInteger('personnel_id')->comment('ไอดีบุคลากรผู้รับผิดชอบ');
             $table->foreign('personnel_id')->references('id')->on('personnels');
             $table->string('status')->default('waiting')->comment('สถานะคำร้องขอ');
-            $table->boolean('is_del')->default(false)->comment('สถานะการลบ');
+            $table->boolean('is_del')->default(false)->comment('สถานะการลบข้อมูล');
             $table->timestamps();
         });
     }
