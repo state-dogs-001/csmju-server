@@ -83,7 +83,7 @@ class BannerController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'สร้างข้อมูลแบนเนอร์เรียบร้อยแล้ว',
+            'message' => 'สร้างข้อมูลแบนเนอร์สำเร็จ',
             'data' => $banner,
         ], 201);
     }
@@ -120,7 +120,7 @@ class BannerController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'แก้ไขข้อมูลแบนเนอร์เรียบร้อยแล้ว',
+            'message' => 'แก้ไขข้อมูลแบนเนอร์สำเร็จ',
             'data' => $banner,
         ], 200);
     }
@@ -138,7 +138,7 @@ class BannerController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'ลบข้อมูลแบนเนอร์เรียบร้อยแล้ว',
+            'message' => 'ลบข้อมูลแบนเนอร์สำเร็จ',
         ], 200);
     }
 }

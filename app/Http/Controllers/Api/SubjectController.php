@@ -57,12 +57,12 @@ class SubjectController extends Controller
             return response()->json([
                 'success' => true,
                 'status' => 'update',
-                'message' => 'อัพเดทข้อมูลรายวิชาเรียบร้อยแล้ว',
+                'message' => 'อัพเดทข้อมูลรายวิชาสำเร็จ',
             ], 200);
         } else {
             //? If not has data, create new subject
             $fields = $request->validate([
-                'subject_code' => 'required|string|max:255',
+                'subject_code' => 'required|string|unique:subjects,subject_code|max:255',
                 'name_th' => 'required|string|max:255',
                 'name_en' => 'required|string|max:255',
                 'detail' => 'required|string',
@@ -181,7 +181,7 @@ class SubjectController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'ลบข้อมูลเรียบร้อยแล้ว'
+            'message' => 'ลบข้อมูลสำเร็จ'
         ], 200);
     }
 }

@@ -8,4 +8,32 @@ use Illuminate\Database\Eloquent\Model;
 class Classroom extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'code',
+        'name',
+        'floor',
+        'building',
+        'faculty',
+        'univerity',
+        'room_type',
+        'reserve_seats',
+        'image',
+        'is_del',
+    ];
+
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
+
+    protected $casts = [
+        'reserve_seats' => 'integer',
+        'is_del' => 'boolean',
+    ];
+
+    public function getImageAttribute($value)
+    {
+        return asset('images/classrooms/' . $value);
+    }
 }

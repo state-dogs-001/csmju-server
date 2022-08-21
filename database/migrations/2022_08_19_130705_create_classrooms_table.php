@@ -20,7 +20,9 @@ return new class extends Migration
             $table->string('floor')->comment('ชั้น');
             $table->string('building')->comment('อาคาร');
             $table->string('faculty')->comment('คณะ');
+            $table->string('univerity')->comment('มหาวิทยาลัย');
             $table->string('room_type')->comment('ประเภทห้องเรียน');
+            $table->integer('reserve_seats')->comment('สำรองที่นั่งได้');
             $table->string('image')->nullable()->comment('รูปภาพ');
             $table->boolean('is_del')->default(false)->comment('สถานะการลบข้อมูล');
             $table->timestamps();

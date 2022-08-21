@@ -95,7 +95,7 @@ class InformationController extends Controller
         $fields = $request->validate([
             'title' => 'required|string',
             'detail' => 'required|string',
-            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'image' => 'required|image|mimes:jpeg,png,jpg|max:3584',
             'link' => 'nullable|string',
             'type' => 'required|string',
             'is_show' => 'boolean',
@@ -125,7 +125,7 @@ class InformationController extends Controller
         $fields = $request->validate([
             'title' => 'required|string',
             'detail' => 'required|string',
-            'image' => 'image|mimes:jpeg,png,jpg|max:2048',
+            'image' => 'image|mimes:jpeg,png,jpg|max:3584',
             'link' => 'nullable|string',
             'type' => 'required|string',
             'is_show' => 'boolean',

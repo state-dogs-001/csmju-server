@@ -59,7 +59,7 @@ class PersonnelController extends Controller
             return response()->json([
                 'success' => true,
                 'status' => 'update',
-                'message' => 'อัพเดตข้อมูลนักศึกษาเรียบร้อย',
+                'message' => 'อัพเดตข้อมูลนักศึกษาสำเร็จ',
             ], 200);
         } else {
             //? If not has data, create new data
@@ -96,7 +96,7 @@ class PersonnelController extends Controller
             return response()->json([
                 'success' => true,
                 'status' => 'create',
-                'message' => 'สร้างข้อมูลบุคคลากรเรียบร้อยแล้ว',
+                'message' => 'สร้างข้อมูลบุคคลากรสำเร็จ',
                 'data' => $personnel,
             ], 201);
         }
@@ -148,7 +148,7 @@ class PersonnelController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'แก้ไขข้อมูลบุคคลากรเรียบร้อยแล้ว',
+            'message' => 'แก้ไขข้อมูลบุคคลากรสำเร็จ',
             'data' => $personnel,
         ], 200);
     }
@@ -208,7 +208,7 @@ class PersonnelController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'ลบข้อมูลเรียบร้อยแล้ว'
+            'message' => 'ลบข้อมูลสำเร็จ'
         ], 200);
     }
 }

@@ -117,6 +117,7 @@ class SubjectResidualController extends Controller
 
         return response()->json([
             'success' => true,
+            'message' => 'บันทึกข้อมูลสำเร็จ',
             'data' => $subjectResidual
         ], 201);
     }
@@ -134,6 +135,7 @@ class SubjectResidualController extends Controller
 
         return response()->json([
             'success' => true,
+            'message' => 'อัพเดทข้อมูลสำเร็จ',
             'data' => $residual
         ], 200);
     }

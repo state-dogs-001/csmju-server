@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\SubjectController;
 use App\Http\Controllers\Api\BannerController;
 use App\Http\Controllers\Api\SubjectResidualController;
 use App\Http\Controllers\Api\InformationController;
+use App\Http\Controllers\Api\ClassroomController;
 
 //? Auth route
 Route::post('/auth/signup', [AuthController::class, 'signup']);
@@ -88,6 +89,17 @@ Route::get('/news/search/all/{keyword}', [InformationController::class, 'searchA
 //? Activity route
 
 //? Classroom route
+Route::get('/classrooms', [ClassroomController::class, 'index']); //? Paginate
+Route::get('/classroom/show/{id}', [ClassroomController::class, 'show']);
+Route::post('/classroom/new', [ClassroomController::class, 'store']);
+Route::post('/classroom/update/{id}', [ClassroomController::class, 'update']);
+Route::get('/classroom/search/{keyword}', [ClassroomController::class, 'search']); //? Paginate
+Route::get('/classroom/filter/room-type/{roomType}', [ClassroomController::class, 'filterRoomType']); //? Show on public pages
+Route::post('/classroom/delete/{id}', [ClassroomController::class, 'delete']);
+
+//? Material route
+
+//? Metarial Borrow route
 
 //? Project research route
 

@@ -62,7 +62,7 @@ class StudentController extends Controller
             return response()->json([
                 'success' => true,
                 'status' => 'update',
-                'message' => 'อัพเดตข้อมูลนักศึกษาเรียบร้อย',
+                'message' => 'อัพเดตข้อมูลนักศึกษาสำเร็จ',
             ]);
         } else {
             //? data is not exist, create new data
@@ -95,7 +95,7 @@ class StudentController extends Controller
             return response()->json([
                 'success' => true,
                 'status' => 'create',
-                'message' => 'สร้างข้อมูลนักศึกษาเรียบร้อยแล้ว',
+                'message' => 'สร้างข้อมูลนักศึกษาสำเร็จ',
                 'data' => $student,
             ], 201);
         }
@@ -142,7 +142,7 @@ class StudentController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'แก้ไขข้อมูลนักศึกษาเรียบร้อยแล้ว',
+            'message' => 'แก้ไขข้อมูลนักศึกษาสำเร็จ',
             'data' => $student,
         ], 200);
     }
@@ -176,7 +176,7 @@ class StudentController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'ลบข้อมูลเรียบร้อยแล้ว'
+            'message' => 'ลบข้อมูลสำเร็จ'
         ], 200);
     }
 }
