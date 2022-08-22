@@ -10,7 +10,7 @@ class Classroom extends Model
     use HasFactory;
 
     protected $fillable = [
-        'code',
+        'classroom_code',
         'name',
         'floor',
         'building',

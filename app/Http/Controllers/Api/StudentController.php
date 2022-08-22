@@ -105,6 +105,8 @@ class StudentController extends Controller
     public function update(Request $request, $id)
     {
         $fields = $request->validate([
+            'citizen_id' => 'required|string|unique:students,citizen_id|max:13' . $id,
+            'student_code' => 'required|string|unique:students,student_code|max:10' . $id,
             'name_th' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
             'image_profile' => 'image|mimes:jpeg,png,jpg|max:3584',

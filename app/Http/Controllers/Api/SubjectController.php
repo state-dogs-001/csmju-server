@@ -88,6 +88,7 @@ class SubjectController extends Controller
     public function update(Request $request, $id)
     {
         $fields = $request->validate([
+            'subject_code' => 'required|string|unique:subjects,subject_code|max:255' . $id,
             'name_th' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
             'detail' => 'required|string',

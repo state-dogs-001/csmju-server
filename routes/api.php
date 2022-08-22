@@ -12,6 +12,8 @@ use App\Http\Controllers\Api\BannerController;
 use App\Http\Controllers\Api\SubjectResidualController;
 use App\Http\Controllers\Api\InformationController;
 use App\Http\Controllers\Api\ClassroomController;
+use App\Http\Controllers\Api\DocumentController;
+use App\Http\Controllers\Api\ProjectController;
 
 //? Auth route
 Route::post('/auth/signup', [AuthController::class, 'signup']);
@@ -84,7 +86,15 @@ Route::post('/news/delete/{id}', [InformationController::class, 'delete']);
 Route::get('/news/all', [InformationController::class, 'indexAll']); //? Get all
 Route::get('/news/search/all/{keyword}', [InformationController::class, 'searchAll']); //? Get all
 
-//? Document route
+//? Official Document route
+Route::get('/documents', [DocumentController::class, 'index']); //? Public (Paginate)
+Route::get('/documents/private', [DocumentController::class, 'indexPrivate']); //? Private (Paginate)
+Route::get('/document/show/{id}', [DocumentController::class, 'show']); //? Private (For dashboard)
+Route::post('/document/new', [DocumentController::class, 'store']);
+Route::post('/document/update/{id}', [DocumentController::class, 'update']);
+Route::get('/document/search/{keyword}', [DocumentController::class, 'search']); //? Public (Paginate)
+Route::get('/document/search/private/{keyword}', [DocumentController::class, 'searchPrivate']); //? Private (Paginate)
+Route::post('/document/delete/{id}', [DocumentController::class, 'delete']);
 
 //? Activity route
 
@@ -101,7 +111,13 @@ Route::post('/classroom/delete/{id}', [ClassroomController::class, 'delete']);
 
 //? Metarial Borrow route
 
-//? Project research route
+//? Project library route
+Route::get('/projects', [ProjectController::class, 'index']); //? Paginate
+Route::get('/project/show/{id}', [ProjectController::class, 'show']);
+Route::post('/project/new', [ProjectController::class, 'store']);
+Route::post('/project/update/{id}', [ProjectController::class, 'update']);
+Route::get('/project/search/{keyword}', [ProjectController::class, 'search']); //? Paginate
+Route::post('/project/delete/{id}', [ProjectController::class, 'delete']);
 
 //? Middleware group
 Route::middleware('auth:sanctum')->group(function () {

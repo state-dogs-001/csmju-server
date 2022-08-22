@@ -47,7 +47,7 @@ class ClassroomController extends Controller
     {
         //? When create new data it'll check if classroom is exist
         $dbCheck = Classroom::where('is_del', true)
-            ->where('code', $request->code)
+            ->where('classroom_code', $request->classroom_code)
             ->first();
 
         if ($dbCheck) {
@@ -64,7 +64,7 @@ class ClassroomController extends Controller
         } else {
             //? If not has data, create new data
             $fields = $request->validate([
-                'code' => 'required|unique:classrooms,code|string',
+                'classroom_code' => 'required|unique:classrooms,classroom_code|string',
                 'name' => 'required|string',
                 'floor' => 'required|string',
                 'building' => 'required|string',
@@ -99,6 +99,7 @@ class ClassroomController extends Controller
     public function update(Request $request, $id)
     {
         $fields = $request->validate([
+            'classroom_code' => 'required|unique:classrooms,classroom_code|string' . $id,
             'name' => 'required|string',
             'floor' => 'required|string',
             'building' => 'required|string',
@@ -144,7 +145,7 @@ class ClassroomController extends Controller
     {
         $classrooms = Classroom::where('is_del', false)
             ->where(function ($query) use ($keyword) {
-                $query->where('code', 'LIKE', "%$keyword%")
+                $query->where('classroom_code', 'LIKE', "%$keyword%")
                     ->orWhere('name', 'LIKE', "%$keyword%");
             })
             ->orderBy('id', 'desc')

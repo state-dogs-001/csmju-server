@@ -106,6 +106,7 @@ class PersonnelController extends Controller
     public function update(Request $request, $id)
     {
         $fields = $request->validate([
+            'citizen_id' => 'required|string|unique:personnels,citizen_id|min:13|max:255' . $id,
             'name_title' => 'required|string|max:255',
             'name_th' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
