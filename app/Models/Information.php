@@ -30,6 +30,8 @@ class Information extends Model
 
     public function getImageAttribute($value)
     {
-        return asset('images/news/' . $value);
+        if ($value) {
+            return asset('images/news/' . $value);
+        }
     }
 }

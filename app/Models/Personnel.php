@@ -40,6 +40,8 @@ class Personnel extends Model
 
     public function getImageProfileAttribute($value)
     {
-        return asset('images/personnels/' . $value);
+        if ($value) {
+            return asset('images/personnels/' . $value);
+        }
     }
 }

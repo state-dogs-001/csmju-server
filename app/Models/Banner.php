@@ -28,6 +28,8 @@ class Banner extends Model
 
     public function getBannerAttribute($value)
     {
-        return asset('images/banners/' . $value);
+        if ($value) {
+            return asset('images/banners/' . $value);
+        }
     }
 }

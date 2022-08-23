@@ -34,6 +34,8 @@ class Classroom extends Model
 
     public function getImageAttribute($value)
     {
-        return asset('images/classrooms/' . $value);
+        if ($value) {
+            return asset('images/classrooms/' . $value);
+        }
     }
 }

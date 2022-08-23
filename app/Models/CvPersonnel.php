@@ -5,28 +5,26 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class OfficialDocument extends Model
+class CvPersonnel extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'name', 'file', 'is_show', 'is_del'
+        'citizen_id',
+        'bachelor_degree',
+        'masters_degree',
+        'doctoral_degree',
+        'bio',
+        'experience',
+        'expertise'
     ];
 
     protected $casts = [
-        'is_show' => 'boolean',
-        'is_del' => 'boolean',
+        'citizen_id' => 'integer',
     ];
 
     protected $hidden = [
         'created_at',
         'updated_at',
     ];
-
-    public function getFileAttribute($value)
-    {
-        if ($value) {
-            return asset('documents/official/' . $value);
-        }
-    }
 }

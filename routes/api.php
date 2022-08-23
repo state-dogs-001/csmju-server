@@ -14,6 +14,8 @@ use App\Http\Controllers\Api\InformationController;
 use App\Http\Controllers\Api\ClassroomController;
 use App\Http\Controllers\Api\DocumentController;
 use App\Http\Controllers\Api\ProjectController;
+use App\Http\Controllers\Api\CvController;
+use App\Http\Controllers\Api\ActivityController;
 
 //? Auth route
 Route::post('/auth/signup', [AuthController::class, 'signup']);
@@ -40,8 +42,17 @@ Route::get('/personnel/search/{keyword}', [PersonnelController::class, 'search']
 Route::post('/personnel/delete/{id}', [PersonnelController::class, 'delete']);
 
 //? CV route
+Route::get('/cv/search/citizen-id/{citizenId}', [CvController::class, 'citizenSearch']);
+Route::post('/cv/new', [CvController::class, 'store']);
+Route::post('/cv/update/{id}', [CvController::class, 'update']);
 
 //? Alumni route
+Route::get('/alumnus', [AlumnusController::class, 'index']); //? Paginate
+Route::get('/alumnus/show/{id}', [AlumnusController::class, 'show']);
+Route::post('/alumnus/new', [AlumnusController::class, 'store']);
+Route::post('/alumnus/update/{id}', [AlumnusController::class, 'update']);
+Route::get('/alumnus/search/{keyword}', [AlumnusController::class, 'search']); //? Paginate
+Route::post('/alumnus/delete/{id}', [AlumnusController::class, 'delete']);
 
 //? Subject route
 Route::get('/subjects', [SubjectController::class, 'index']); //? Paginate
@@ -97,6 +108,16 @@ Route::get('/document/search/private/{keyword}', [DocumentController::class, 'se
 Route::post('/document/delete/{id}', [DocumentController::class, 'delete']);
 
 //? Activity route
+Route::get('/activities', [ActivityController::class, 'index']); //? Public (Paginate)
+Route::get('/activities/private', [ActivityController::class, 'indexPrivate']); //? Private (Paginate)
+Route::get('/activity/limit/{number}', [ActivityController::class, 'limit']); //? Limit
+Route::get('/activity/show/{id}', [ActivityController::class, 'showRead']); //? For Read
+Route::get('/activity/show/update/{id}', [ActivityController::class, 'showUpdate']); //? For update
+Route::get('/activity/search/{keyword}', [ActivityController::class, 'search']); //? Public (Paginate)
+Route::get('/activity/search/private/{keyword}', [ActivityController::class, 'searchPrivate']); //? Private (Paginate)
+Route::post('/activity/new', [ActivityController::class, 'store']);
+Route::post('/activity/update/{id}', [ActivityController::class, 'update']);
+Route::post('/activity/delete/{id}', [ActivityController::class, 'delete']);
 
 //? Classroom route
 Route::get('/classrooms', [ClassroomController::class, 'index']); //? Paginate

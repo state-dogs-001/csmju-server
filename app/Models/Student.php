@@ -35,6 +35,8 @@ class Student extends Model
 
     public function getImageProfileAttribute($value)
     {
-        return asset('images/students/' . $value);
+        if ($value) {
+            return asset('images/students/' . $value);
+        }
     }
 }

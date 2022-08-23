@@ -5,18 +5,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ProjectLibrary extends Model
+class Alumnus extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'project_code',
+        'student_code',
         'name',
-        'years',
-        'file',
-        'chairman',
-        'type',
+        'work_place',
+        'job_title',
+        'caption',
+        'tel_number',
+        'image_profile',
         'is_del',
+    ];
+
+    protected $casts = [
+        'is_del' => 'boolean',
     ];
 
     protected $hidden = [
@@ -24,14 +29,10 @@ class ProjectLibrary extends Model
         'updated_at',
     ];
 
-    protected $casts = [
-        'is_del' => 'boolean',
-    ];
-
-    public function getFileAttribute($value)
+    public function getImageProfileAttribute($value)
     {
         if ($value) {
-            return asset('documents/projects/' . $value);
+            return asset('images/alumnus/' . $value);
         }
     }
 }
