@@ -113,7 +113,8 @@ Route::post('/classroom/delete/{id}', [ClassroomController::class, 'delete']);
 
 //? Project library route
 Route::get('/projects', [ProjectController::class, 'index']); //? Paginate
-Route::get('/project/show/{id}', [ProjectController::class, 'show']);
+Route::get('/project/show/{id}', [ProjectController::class, 'show']); //? Show for update
+Route::get('/project/show/read/{id}', [ProjectController::class, 'showRead']); //? Show for read
 Route::post('/project/new', [ProjectController::class, 'store']);
 Route::post('/project/update/{id}', [ProjectController::class, 'update']);
 Route::get('/project/search/{keyword}', [ProjectController::class, 'search']); //? Paginate

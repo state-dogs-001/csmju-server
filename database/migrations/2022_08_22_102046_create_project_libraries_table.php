@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('years')->comment('ปีการศึกษา');
             $table->string('file')->comment('ไฟล์เอกสารการทำโครงงาน');
             $table->string('type')->comment('ประเภทโครงงาน');
+            $table->unsignedBigInteger('chairman')->comment('ไอดีบุคลากรผู้เป็นประธานกรรมการโครงงาน');
+            $table->foreign('chairman')->references('id')->on('personnels');
             $table->boolean('is_del')->default(false)->comment('สถานะการลบข้อมูล');
             $table->timestamps();
         });

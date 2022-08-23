@@ -13,7 +13,8 @@ class ProjectLibrary extends Model
         'project_code', 
         'name', 
         'years', 
-        'file', 
+        'file',
+        'chairman', 
         'type',
         'is_del',
     ];
