@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\DocumentController;
 use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\CvController;
 use App\Http\Controllers\Api\ActivityController;
+use App\Http\Controllers\Api\AlumnusController;
 
 //? Auth route
 Route::post('/auth/signup', [AuthController::class, 'signup']);
@@ -48,11 +49,11 @@ Route::post('/cv/update/{id}', [CvController::class, 'update']);
 
 //? Alumni route
 Route::get('/alumnus', [AlumnusController::class, 'index']); //? Paginate
-Route::get('/alumnus/show/{id}', [AlumnusController::class, 'show']);
-Route::post('/alumnus/new', [AlumnusController::class, 'store']);
-Route::post('/alumnus/update/{id}', [AlumnusController::class, 'update']);
-Route::get('/alumnus/search/{keyword}', [AlumnusController::class, 'search']); //? Paginate
-Route::post('/alumnus/delete/{id}', [AlumnusController::class, 'delete']);
+Route::get('/alumni/show/{id}', [AlumnusController::class, 'show']);
+Route::post('/alumni/new', [AlumnusController::class, 'store']);
+Route::post('/alumni/update/{id}', [AlumnusController::class, 'update']);
+Route::get('/alumni/search/{keyword}', [AlumnusController::class, 'search']); //? Paginate
+Route::post('/alumni/delete/{id}', [AlumnusController::class, 'delete']);
 
 //? Subject route
 Route::get('/subjects', [SubjectController::class, 'index']); //? Paginate
