@@ -139,8 +139,9 @@ class DocumentController extends Controller
     public function delete($id)
     {
         $document = OfficialDocument::findOrFail($id);
-        $document->is_del = true;
-        $document->save();
+        $document->update([
+            'is_del' => true
+        ]);
 
         return response()->json([
             'success' => true,

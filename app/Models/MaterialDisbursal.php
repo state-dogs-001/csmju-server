@@ -5,21 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Material extends Model
+class MaterialDisbursal extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'name',
+        'citizen_id',
+        'material_id',
         'quantity',
-        'image',
-        'status',
         'is_del'
     ];
 
     protected $casts = [
-        'quantity' => 'integer',
-        'status' => 'boolean',
+        'material_id' => 'integer',
         'is_del' => 'boolean'
     ];
 
@@ -27,11 +25,4 @@ class Material extends Model
         'created_at',
         'updated_at',
     ];
-
-    public function getImageAttribute($value)
-    {
-        if ($value) {
-            return asset('images/materials/' . $value);
-        }
-    }
 }

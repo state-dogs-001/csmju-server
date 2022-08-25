@@ -17,6 +17,8 @@ use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\CvController;
 use App\Http\Controllers\Api\ActivityController;
 use App\Http\Controllers\Api\AlumnusController;
+use App\Http\Controllers\Api\MaterialController;
+use App\Http\Controllers\Api\MaterialDisbursalController;
 
 //? Auth route
 Route::post('/auth/signup', [AuthController::class, 'signup']);
@@ -130,8 +132,22 @@ Route::get('/classroom/filter/room-type/{roomType}', [ClassroomController::class
 Route::post('/classroom/delete/{id}', [ClassroomController::class, 'delete']);
 
 //? Material route
+Route::get('/materials', [MaterialController::class, 'index']); //? Paginate (Public)
+Route::get('/materials/private', [MaterialController::class, 'indexPrivate']); //? Paginate (Private)
+Route::get('/material/show/{id}', [MaterialController::class, 'show']); //? Show material in stock
+Route::get('/material/show/update/{id}', [MaterialController::class, 'showUpdate']); //? Show for update
+Route::get('/material/search/{keyword}', [MaterialController::class, 'search']); //? Paginate (Public)
+Route::get('/material/search/private/{keyword}', [MaterialController::class, 'searchPrivate']); //? Paginate (Private)
+Route::post('/material/new', [MaterialController::class, 'store']);
+Route::post('/material/update/{id}', [MaterialController::class, 'update']);
+Route::post('/material/delete/{id}', [MaterialController::class, 'delete']);
 
 //? Metarial Borrow route
+Route::get('/materials/disbursals', [MaterialDisbursalController::class, 'index']); //? Paginate
+Route::get('/material/disbursal/search/{keyword}', [MaterialDisbursalController::class, 'search']); //? Paginate
+Route::get('/material/disbursal/filter/{citizen_id}', [MaterialDisbursalController::class, 'filterByCitizenId']);
+Route::post('/material/disbursal/new', [MaterialDisbursalController::class, 'store']);
+Route::post('/material/disbursal/delete/{id}', [MaterialDisbursalController::class, 'delete']);
 
 //? Project library route
 Route::get('/projects', [ProjectController::class, 'index']); //? Paginate

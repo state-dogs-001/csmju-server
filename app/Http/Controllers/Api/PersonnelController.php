@@ -196,16 +196,13 @@ class PersonnelController extends Controller
     }
 
     //? Delete student
-    public function delete(Request $request, $id)
+    public function delete($id)
     {
-        $field = $request->validate([
-            'is_del' => 'required|boolean',
-        ]);
-
+        //? Find personnel by id
         $student = Personnel::findOrFail($id);
-
-        //? Update is_del field to true
-        $student->update($field);
+        $student->update([
+            'is_del' => true,
+        ]);
 
         return response()->json([
             'success' => true,

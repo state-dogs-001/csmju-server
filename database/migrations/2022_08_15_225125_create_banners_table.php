@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('banners', function (Blueprint $table) {
             $table->id();
-            $table->string('banner')->comment('รูปภาพ Banner');
+            $table->string('banner')->nullable()->comment('รูปภาพ Banner');
             $table->string('link')->nullable()->comment('ลิงค์');
             $table->boolean('is_show')->default(true)->comment('สถานะการแสดงของ Banner');
             $table->boolean('is_del')->default(false)->comment('สถานะการลบข้อมูล');

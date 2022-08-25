@@ -126,15 +126,12 @@ class BannerController extends Controller
     }
 
     //? Delete
-    public function delete(Request $request, $id)
+    public function delete($id)
     {
-        $field = $request->validate([
-            'is_del' => 'boolean',
-        ]);
-
         $banner = Banner::findOrFail($id);
-
-        $banner->update($field);
+        $banner->update([
+            'is_del' => true,
+        ]);
 
         return response()->json([
             'success' => true,

@@ -235,17 +235,13 @@ class InformationController extends Controller
     }
 
     //? Delete information
-    public function delete(Request $request, $id)
+    public function delete($id)
     {
-        $field = $request->validate([
-            'is_del' => 'required|boolean',
-        ]);
-
         //? Find information by id for delete
         $news = Information::findOrFail($id);
-
-        //? Update is_del field to true
-        $news->update($field);
+        $news->update([
+            'is_del' => true,
+        ]);
 
         return response()->json([
             'success' => true,

@@ -17,7 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string('name')->comment('ชื่ออุปกรณ์');
             $table->integer('quantity')->comment('จำนวน');
-            $table->string('status')->default('inStock')->comment('สถานะ');
+            $table->string('image')->nullable()->comment('รูปภาพของวัสดุอุปกรณ์');
+            $table->boolean('status')->default(true)->comment('สถานะของวัสดุอุปกรณ์');
             $table->boolean('is_del')->default(false)->comment('สถานะการลบข้อมูล');
             $table->timestamps();
         });

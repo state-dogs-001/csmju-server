@@ -171,14 +171,10 @@ class SubjectController extends Controller
     //? Dalete a subject set is_del = true
     public function delete(Request $request, $id)
     {
-        $field = $request->validate([
-            'is_del' => 'required|boolean',
-        ]);
-
         $student = Subject::findOrFail($id);
-
-        //? Update is_del field to true
-        $student->update($field);
+        $student->update([
+            'is_del' => true,
+        ]);
 
         return response()->json([
             'success' => true,

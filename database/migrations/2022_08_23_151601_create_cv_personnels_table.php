@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('cv_personnels', function (Blueprint $table) {
             $table->id();
             $table->string('citizen_id', 13)->unique()->comment('เลขประจำตัวประชาชน');
+            $table->foreign('citizen_id')->references('citizen_id')->on('personnels');
             $table->text('bachelor_degree')->comment('ปริญญาตรี');
             $table->text('masters_degree')->nullable()->comment('ปริญญาโท');
             $table->text('doctoral_degree')->nullable()->comment('ปริญญาเอก');

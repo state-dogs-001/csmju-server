@@ -199,7 +199,6 @@ class ProjectController extends Controller
     public function delete($id)
     {
         $project = ProjectLibrary::findOrFail($id);
-
         $project->update([
             'is_del' => true
         ]);

@@ -168,17 +168,13 @@ class ClassroomController extends Controller
     }
 
     //? Delete classroom
-    public function delete(Request $request, $id)
+    public function delete($id)
     {
-        $field = $request->validate([
-            'is_del' => 'required|boolean',
-        ]);
-
         //? Find classroom by id for update
         $classroom = Classroom::findOrFail($id);
-
-        //? Update classroom
-        $classroom->update($field);
+        $classroom->update([
+            'is_del' => true,
+        ]);
 
         return response()->json([
             'success' => true,
