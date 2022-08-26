@@ -142,7 +142,7 @@ Route::post('/material/new', [MaterialController::class, 'store']);
 Route::post('/material/update/{id}', [MaterialController::class, 'update']);
 Route::post('/material/delete/{id}', [MaterialController::class, 'delete']);
 
-//? Metarial Borrow route
+//? Metarial disbursal route
 Route::get('/materials/disbursals', [MaterialDisbursalController::class, 'index']); //? Paginate
 Route::get('/material/disbursal/search/{keyword}', [MaterialDisbursalController::class, 'search']); //? Paginate
 Route::get('/material/disbursal/filter/{citizen_id}', [MaterialDisbursalController::class, 'filterByCitizenId']);
@@ -157,6 +157,12 @@ Route::post('/project/new', [ProjectController::class, 'store']);
 Route::post('/project/update/{id}', [ProjectController::class, 'update']);
 Route::get('/project/search/{keyword}', [ProjectController::class, 'search']); //? Paginate
 Route::post('/project/delete/{id}', [ProjectController::class, 'delete']);
+
+//? Equipment route
+
+//? Equipment borrow route
+
+//? Maintenance route
 
 //? Middleware group
 Route::middleware('auth:sanctum')->group(function () {

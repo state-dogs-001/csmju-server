@@ -17,8 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string('name')->comment('ชื่อกิจกรรม');
             $table->string('organizer')->comment('ผู้รับผิดชอบกิจกรรม');
-            $table->dateTime('date_start')->comment('วันแรกที่จัดกิจกรรม');
-            $table->dateTime('date_end')->nullable()->comment('วันสุดท้ายที่จัดกิจกรรม');
+            $table->date('date_start')->comment('วันแรกที่จัดกิจกรรม');
+            $table->date('date_end')->nullable()->comment('วันสุดท้ายที่จัดกิจกรรม');
             $table->text('detail')->comment('รายละเอียดกิจกรรม');
             $table->string('image')->nullable()->comment('รูปกิจกรรม');
             $table->boolean('is_show')->default(true)->comment('สถานะการแสดงข้อมูล');

@@ -21,8 +21,8 @@ class Activity extends Model
     ];
 
     protected $casts = [
-        'date_start' => 'datetime:Y-m-d',
-        'date_end' => 'datetime:Y-m-d',
+        'date_start' => 'date:Y-m-d',
+        'date_end' => 'date:Y-m-d',
         'is_show' => 'boolean',
         'is_del' => 'boolean',
     ];
