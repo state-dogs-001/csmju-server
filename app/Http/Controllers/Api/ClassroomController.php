@@ -33,7 +33,7 @@ class ClassroomController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'ไม่พบข้อมูล'
-            ], 404);
+            ], 200);
         } else {
             return response()->json([
                 'success' => true,
@@ -47,7 +47,7 @@ class ClassroomController extends Controller
     {
         //? When create new data it'll check if classroom is exist
         $dbCheck = Classroom::where('is_del', true)
-            ->where('classroom_code', $request->classroom_code)
+            ->where('room_code', $request->room_code)
             ->first();
 
         if ($dbCheck) {
@@ -64,7 +64,7 @@ class ClassroomController extends Controller
         } else {
             //? If not has data, create new data
             $fields = $request->validate([
-                'classroom_code' => 'required|unique:classrooms,classroom_code|string',
+                'room_code' => 'required|unique:classrooms,room_code|string',
                 'name' => 'required|string',
                 'floor' => 'required|string',
                 'building' => 'required|string',
@@ -72,7 +72,7 @@ class ClassroomController extends Controller
                 'univerity' => 'required|string',
                 'reserve_seats' => 'required|integer',
                 'room_type' => 'required|string',
-                'image' => 'image|mimes:jpeg,png,jpg|max:3584',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg|max:3584',
             ]);
 
             //? Upload image
@@ -99,7 +99,7 @@ class ClassroomController extends Controller
     public function update(Request $request, $id)
     {
         $fields = $request->validate([
-            'classroom_code' => 'required|unique:classrooms,classroom_code|string' . $id,
+            'room_code' => 'required|string',
             'name' => 'required|string',
             'floor' => 'required|string',
             'building' => 'required|string',
@@ -107,7 +107,7 @@ class ClassroomController extends Controller
             'univerity' => 'required|string',
             'reserve_seats' => 'required|integer',
             'room_type' => 'required|string',
-            'image' => 'image|mimes:jpeg,png,jpg|max:3584',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:3584',
         ]);
 
         //? Find classroom by id for update
@@ -145,7 +145,7 @@ class ClassroomController extends Controller
     {
         $classrooms = Classroom::where('is_del', false)
             ->where(function ($query) use ($keyword) {
-                $query->where('classroom_code', 'LIKE', "%$keyword%")
+                $query->where('room_code', 'LIKE', "%$keyword%")
                     ->orWhere('name', 'LIKE', "%$keyword%");
             })
             ->orderBy('id', 'desc')

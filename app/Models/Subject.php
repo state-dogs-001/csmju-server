@@ -19,7 +19,6 @@ class Subject extends Model
         'practical_hour',
         'self_hour',
         'term',
-        'is_show',
         'is_del',
     ];
 
@@ -29,7 +28,6 @@ class Subject extends Model
     ];
 
     protected $casts = [
-        'is_show' => 'boolean',
         'is_del' => 'boolean',
     ];
 }

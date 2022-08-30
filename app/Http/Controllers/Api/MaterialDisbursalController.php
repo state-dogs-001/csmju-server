@@ -96,7 +96,7 @@ class MaterialDisbursalController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'ไม่พบข้อมูลวัสดุอุปกรณ์',
-            ], 404);
+            ], 200);
         } else {
             //? Calculate new quantity
             $oldQuantity = $material->quantity;

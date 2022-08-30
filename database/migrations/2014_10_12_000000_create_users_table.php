@@ -16,10 +16,10 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('email')->unique()->comment('อีเมลล์');
-            $table->string('name')->comment('ชื่อผู้ใช้งาน');
+            $table->string('password')->comment('รหัสผ่าน');
+            $table->string('citizen_id')->unique()->comment('เลขบัตรประชาชนของผู้ใช้งาน');
             $table->string('role')->comment('สิทธิ์การใช้งานระบบ');
             $table->timestamp('email_verified_at')->nullable()->comment('สถานะการยืนยันอีเมลล์');
-            $table->string('password')->comment('รหัสผ่าน');
             $table->rememberToken()->comment('เครื่องหมายอ้างอิงการจดจำรหัสผ่าน');
             $table->timestamps();
         });

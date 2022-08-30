@@ -33,7 +33,28 @@ class StudentController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'ไม่พบข้อมูล',
-            ], 404);
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => true,
+                'data' => $student,
+            ], 200);
+        }
+    }
+
+    //? Search by citizen id
+    public function citizenSearch($citizenId)
+    {
+        $student = Student::where('citizen_id', $citizenId)
+            ->where('is_del', false)
+            ->first();
+
+        //? Check if student is exist
+        if (!$student) {
+            return response()->json([
+                'success' => false,
+                'message' => 'ไม่พบข้อมูล',
+            ], 200);
         } else {
             return response()->json([
                 'success' => true,
@@ -105,8 +126,8 @@ class StudentController extends Controller
     public function update(Request $request, $id)
     {
         $fields = $request->validate([
-            'citizen_id' => 'required|string|unique:students,citizen_id|max:13' . $id,
-            'student_code' => 'required|string|unique:students,student_code|max:10' . $id,
+            'citizen_id' => 'required|string|max:13' . $id,
+            'student_code' => 'required|string|max:10' . $id,
             'name_th' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
             'image_profile' => 'image|mimes:jpeg,png,jpg|max:3584',
@@ -161,6 +182,13 @@ class StudentController extends Controller
             ->orderBy('id', 'desc')
             ->paginate(20);
 
+        return response()->json($student, 200);
+    }
+
+    //? Count
+    public function count()
+    {
+        $student = Student::where('is_del', false)->count();
         return response()->json($student, 200);
     }
 

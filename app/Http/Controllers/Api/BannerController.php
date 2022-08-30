@@ -16,7 +16,7 @@ class BannerController extends Controller
     {
         $banners = Banner::where('is_del', false)
             ->orderBy('id', 'desc')
-            ->paginate(20);
+            ->paginate(12);
 
         return response()->json($banners, 200);
     }
@@ -33,7 +33,7 @@ class BannerController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'ไม่มีข้อมูล Banner'
-            ], 404);
+            ], 200);
         } else {
             return response()->json([
                 'success' => true,
@@ -54,7 +54,7 @@ class BannerController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'ไม่พบข้อมูล',
-            ], 404);
+            ], 200);
         } else {
             return response()->json([
                 'success' => true,
@@ -123,6 +123,13 @@ class BannerController extends Controller
             'message' => 'แก้ไขข้อมูลแบนเนอร์สำเร็จ',
             'data' => $banner,
         ], 200);
+    }
+
+    //? Count banner
+    public function count()
+    {
+        $count = Banner::where('is_del', false)->count();
+        return response()->json($count, 200);
     }
 
     //? Delete

@@ -31,7 +31,7 @@ class SubjectController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'ไม่พบข้อมูล'
-            ], 404);
+            ], 200);
         } else {
             return response()->json([
                 'success' => true,
@@ -70,8 +70,7 @@ class SubjectController extends Controller
                 'theory_hour' => 'required|integer',
                 'practical_hour' => 'required|integer',
                 'self_hour' => 'required|integer',
-                'term' => 'required|integer',
-                'is_show' => 'boolean',
+                'term' => 'nullable|integer',
             ]);
 
             $subject = Subject::create($fields);
@@ -88,7 +87,7 @@ class SubjectController extends Controller
     public function update(Request $request, $id)
     {
         $fields = $request->validate([
-            'subject_code' => 'required|string|unique:subjects,subject_code|max:255' . $id,
+            'subject_code' => 'required|string|max:255' . $id,
             'name_th' => 'required|string|max:255',
             'name_en' => 'required|string|max:255',
             'detail' => 'required|string',
@@ -96,8 +95,7 @@ class SubjectController extends Controller
             'theory_hour' => 'required|integer',
             'practical_hour' => 'required|integer',
             'self_hour' => 'required|integer',
-            'term' => 'required|integer',
-            'is_show' => 'boolean',
+            'term' => 'nullable|integer',
         ]);
 
         //? Find subject by id
@@ -118,7 +116,8 @@ class SubjectController extends Controller
             ->where(function ($query) use ($keyword) {
                 $query->where('name_th', 'LIKE', "%$keyword%")
                     ->orWhere('name_en', 'LIKE', "%$keyword%")
-                    ->orWhere('subject_code', 'LIKE', "%$keyword%");
+                    ->orWhere('subject_code', 'LIKE', "%$keyword%")
+                    ->orWhere('detail', 'LIKE', "%$keyword%");
             })
             ->orderBy('id', 'desc')
             ->paginate(20);
@@ -138,7 +137,7 @@ class SubjectController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'ไม่พบรายวิชาที่ต้องการ'
-            ], 404);
+            ], 200);
         } else {
             return response()->json([
                 'success' => true,
@@ -159,13 +158,21 @@ class SubjectController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'ไม่พบรายวิชาที่ต้องการ'
-            ], 404);
+            ], 200);
         } else {
             return response()->json([
                 'success' => true,
                 'data' => $subjects
             ], 200);
         }
+    }
+
+    //? Subject count
+    public function count()
+    {
+        $count = Subject::where('is_del', false)
+            ->count();
+        return response()->json($count, 200);
     }
 
     //? Dalete a subject set is_del = true

@@ -33,7 +33,7 @@ class PersonnelController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'ไม่พบข้อมูล',
-            ], 404);
+            ], 200);
         } else {
             return response()->json([
                 'success' => true,
@@ -193,6 +193,25 @@ class PersonnelController extends Controller
             'success' => true,
             'data' => $staff
         ], 200);
+    }
+
+    //? Get personnel by citizen id
+    public function citizenSearch($citizenId)
+    {
+        $personnel = Personnel::where('is_del', false)
+            ->where('citizen_id', $citizenId)
+            ->first();
+        if (!$personnel) {
+            return response()->json([
+                'success' => false,
+                'message' => 'ไม่พบข้อมูลบุคลากร',
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => true,
+                'data' => $personnel
+            ], 200);
+        }
     }
 
     //? Delete student

@@ -15,7 +15,7 @@ class AuthController extends Controller
     {
         return response()->json([
             'success' => true,
-            'data' => $request->user()
+            'data' => $request->user(),
         ], 200);
     }
 
@@ -23,17 +23,17 @@ class AuthController extends Controller
     public function signup(Request $request)
     {
         $fields = $request->validate([
-            'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email|max:255',
             'password' => 'required|min:6|max:255|confirmed',
+            'citizen_id' => 'required|unique:users,citizen_id|max:13',
             'role' => 'required|string|max:255',
         ]);
 
         //? Create new user
         $user = User::create([
-            'name' => $fields['name'],
             'email' => $fields['email'],
             'password' => Hash::make($fields['password']),
+            'citizen_id' => $fields['citizen_id'],
             'role' => $fields['role'],
         ]);
 

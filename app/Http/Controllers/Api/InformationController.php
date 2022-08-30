@@ -59,7 +59,7 @@ class InformationController extends Controller
             return response()->json([
                 'sucess' => false,
                 'message' => 'ไม่พบข้อมูล',
-            ], 404);
+            ], 200);
         } else {
             return response()->json([
                 'success' => true,
@@ -80,7 +80,7 @@ class InformationController extends Controller
             return response()->json([
                 'sucess' => false,
                 'message' => 'ไม่พบข้อมูล',
-            ], 404);
+            ], 200);
         } else {
             return response()->json([
                 'success' => true,
@@ -210,7 +210,7 @@ class InformationController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'ไม่พบข้อมูล',
-            ], 404);
+            ], 200);
         } else {
             return response()->json([
                 'success' => true,

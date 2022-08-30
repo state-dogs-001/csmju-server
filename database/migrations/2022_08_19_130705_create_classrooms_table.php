@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('classrooms', function (Blueprint $table) {
             $table->id();
-            $table->string('classroom_code')->unique()->comment('รหัสห้องเรียน');
+            $table->string('room_code')->comment('รหัสห้องเรียน');
             $table->string('name')->comment('ชื่อห้องเรียน');
             $table->string('floor')->comment('ชั้น');
             $table->string('building')->comment('อาคาร');
