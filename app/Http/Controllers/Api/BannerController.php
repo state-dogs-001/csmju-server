@@ -68,7 +68,7 @@ class BannerController extends Controller
     {
         $fields = $request->validate([
             'banner' => 'required|image|mimes:jpeg,png,jpg|max:3584',
-            'link' => 'nullable|url',
+            'link' => 'nullable|string',
             'is_show' => 'boolean',
         ]);
 
@@ -93,7 +93,7 @@ class BannerController extends Controller
     {
         $fields = $request->validate([
             'banner' => 'image|mimes:jpeg,png,jpg|max:3584',
-            'link' => 'nullable|url',
+            'link' => 'nullable|string',
             'is_show' => 'boolean',
         ]);
 

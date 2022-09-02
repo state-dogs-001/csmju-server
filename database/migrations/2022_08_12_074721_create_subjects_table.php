@@ -19,10 +19,10 @@ return new class extends Migration
             $table->string('name_th')->comment('ชื่อวิชาภาษาไทย');
             $table->string('name_en')->comment('ชื่อวิชาภาษาอังกฤษ');
             $table->text('detail')->comment('รายละเอียดวิชา');
-            $table->integer('credit')->nullable()->comment('หน่วยกิต');
-            $table->integer('theory_hour')->nullable()->comment('จำนวนชั่วโมงเรียนทฤษฎีต่อสัปดาห์');
-            $table->integer('practical_hour')->nullable()->comment('จำนวนชั่วโมงเรียนปฏิบัติต่อสัปดาห์');
-            $table->integer('self_hour')->nullable()->comment('จำนวนชั่วโมงศึกษาค้นคว้าด้วยตัวเองต่อสัปดาห์');
+            $table->integer('credit')->comment('หน่วยกิต');
+            $table->integer('theory_hour')->comment('จำนวนชั่วโมงเรียนทฤษฎีต่อสัปดาห์');
+            $table->integer('practical_hour')->comment('จำนวนชั่วโมงเรียนปฏิบัติต่อสัปดาห์');
+            $table->integer('self_hour')->comment('จำนวนชั่วโมงศึกษาค้นคว้าด้วยตัวเองต่อสัปดาห์');
             $table->integer('term')->nullable()->comment('ภาคการศึกษา');
             $table->string('is_del')->default(false)->comment('สถานะการลบข้อมูล');
             $table->timestamps();

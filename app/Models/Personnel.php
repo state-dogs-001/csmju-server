@@ -14,22 +14,20 @@ class Personnel extends Model
         'name_title',
         'name_th',
         'name_en',
+        'position_academic',
+        'position_manager',
         'image_profile',
         'email',
         'tel_number',
-        'occupation',
-        'position',
-        'position_type',
-        'faculty',
-        'edu_level',
-        'edu_course_name',
-        'edu_major',
-        'edu_institute',
+        'education',
+        'personnel_type',
+        'academic_type',
         'work_status',
         'is_del',
     ];
 
     protected $casts = [
+        'work_status' => 'integer',
         'is_del' => 'boolean',
     ];
 

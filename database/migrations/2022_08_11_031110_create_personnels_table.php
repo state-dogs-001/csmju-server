@@ -15,24 +15,20 @@ return new class extends Migration
     {
         Schema::create('personnels', function (Blueprint $table) {
             $table->id();
-            $table->string('citizen_id', 13)->unique()->comment('รหัสบัตรประชาชน');
-            $table->string('name_title')->comment('คำนำหน้าชื่อ');
+            $table->string('citizen_id', 13)->unique()->nullable()->comment('รหัสบัตรประชาชน');
+            $table->string('name_title')->nullable()->comment('คำนำหน้าชื่อ');
             $table->string('name_th')->comment('ชื่อไทย');
             $table->string('name_en')->comment('ชื่ออังกฤษ');
+            $table->text('position_academic')->nullable()->comment('ตำแหน่งทางวิชาการ');
+            $table->text('position_manager')->nullable()->comment('ตำแหน่งทางบริหาร');
             $table->string('image_profile')->nullable()->comment('รูปโปรไฟล์');
-            $table->string('email')->comment('ต้องเป็นอีเมลล์ของมหาวิทยาลัยเท่านั้น');
-            $table->string('tel_number')->comment('เบอร์โทรศัพท์');
-            $table->string('occupation')->comment('อาชีพของบุคคลากร');
-            $table->string('position')->comment('ตำแหน่งของบุคลากร');
-            $table->string('position_type')->comment('ประเภทของตำแหน่งของบุคลากร');
-            $table->string('faculty')->default('คณะวิทยาศาสตร์')->comment('คณะที่สังกัด');
-            $table->string('edu_level')->comment('ระดับการศึกษา');
-            $table->string('edu_course_name')->comment('ชื่อหลักสูตรที่สำเร็จการศึกษา');
-            $table->string('edu_major')->comment('สาขาวิชาที่สำเร็จการศึกษา');
-            $table->string('edu_institute')->comment('จบมาจากสถาบันการศึกษา');
-            $table->string('work_status')->comment('สถานะการทำงาน');
-            $table->boolean('is_del')->default(false)->comment('สถานะการลบข้อมูล');
-            $table->timestamps();
+            $table->string('email')->nullable()->comment('อีเมล');
+            $table->string('tel_number')->nullable()->comment('เบอร์โทรศัพท์');
+            $table->text('education')->nullable()->comment('ประวัติการศึกษา');
+            //? อาจารย์ หรือ เจ้าหน้าที่
+            $table->string('personnel_type')->comment('ประเภทของบุคลากร');
+            //? ข้าราชการ หรือ พนักงานมหาวิทยาลัย
+            $table->string('academic_type')->nullable()->comment('ประเภททางมหาวิทยาลัย');
         });
     }
 

@@ -24,40 +24,10 @@ use App\Http\Controllers\Api\MaterialDisbursalController;
 Route::post('/auth/signup', [AuthController::class, 'signup']);
 Route::post('/auth/signin', [AuthController::class, 'signin']);
 
-//? CheckSignin route
-Route::get('/checksignin/users', [CheckSigninController::class, 'index']); //? Paginate
-Route::post('/checksignin/new', [CheckSigninController::class, 'store']);
-
 //? CV route
 Route::get('/cv/search/citizen-id/{citizenId}', [CvController::class, 'citizenSearch']);
 Route::post('/cv/new', [CvController::class, 'store']);
 Route::post('/cv/update/{id}', [CvController::class, 'update']);
-
-//? Alumni route
-Route::get('/alumnus', [AlumnusController::class, 'index']); //? Paginate
-Route::get('/alumni/show/{id}', [AlumnusController::class, 'show']);
-Route::post('/alumni/new', [AlumnusController::class, 'store']);
-Route::post('/alumni/update/{id}', [AlumnusController::class, 'update']);
-Route::get('/alumni/search/{keyword}', [AlumnusController::class, 'search']); //? Paginate
-Route::post('/alumni/delete/{id}', [AlumnusController::class, 'delete']);
-
-//? News route for web and mobile app
-Route::get('/news/show/{id}', [InformationController::class, 'show']); //? For public
-Route::get('/news/limit/{number}', [InformationController::class, 'newsLimit']); //? Limit
-
-//? News route for web
-Route::get('/news', [InformationController::class, 'index']); //? Paginate (For public)
-Route::get('/news/private', [InformationController::class, 'indexPrivate']); //? Paginate (For private)
-Route::get('/news/show/private/{id}', [InformationController::class, 'showPrivate']); //? For private for dashboard
-Route::get('/news/search/{keyword}', [InformationController::class, 'search']); //? Paginate (For public)
-Route::get('/news/search/private/{keyword}', [InformationController::class, 'searchPrivate']); //? Paginate (For private for dashboard)
-Route::post('/news/new', [InformationController::class, 'store']);
-Route::post('/news/update/{id}', [InformationController::class, 'update']);
-Route::post('/news/delete/{id}', [InformationController::class, 'delete']);
-
-//? News route for mobile app
-Route::get('/news/all', [InformationController::class, 'indexAll']); //? Get all
-Route::get('/news/search/all/{keyword}', [InformationController::class, 'searchAll']); //? Get all
 
 //? Official Document route
 Route::get('/documents', [DocumentController::class, 'index']); //? Public (Paginate)
@@ -123,21 +93,29 @@ Route::post('/project/delete/{id}', [ProjectController::class, 'delete']);
 
 //? Maintenance route
 
+//? Contact route
+
 //? Middleware group
 Route::middleware('auth:sanctum')->group(function () {
     //? Auth middleware route
     Route::get('/auth/user', [AuthController::class, 'show']);
     Route::post('/auth/signout', [AuthController::class, 'signout']);
 
+    //? CheckSignin route
+    Route::get('/checksignin/users', [CheckSigninController::class, 'index']); //? Paginate
+    Route::post('/checksignin/new', [CheckSigninController::class, 'store']);
+
     //? Personnel route
     Route::get('/personnels', [PersonnelController::class, 'index']); //? Paginate
     Route::get('/personnel/show/{id}', [PersonnelController::class, 'show']);
+    Route::get('/personnel/show/update/{id}', [PersonnelController::class, 'showUpdate']);
     Route::post('/personnel/new', [PersonnelController::class, 'store']);
     Route::post('/personnel/update/{id}', [PersonnelController::class, 'update']);
     Route::get('/personnel/search/{keyword}', [PersonnelController::class, 'search']); //? Paginate
     Route::get('/personnel/filter/teacher', [PersonnelController::class, 'filterTeacher']);
     Route::get('/personnel/filter/staff', [PersonnelController::class, 'filterStaff']);
     Route::get('/personnel/search/citizen-id/{citizenId}', [PersonnelController::class, 'citizenSearch']);
+    Route::get('/personnel/status', [PersonnelController::class, 'personnelStatus']);
     Route::post('/personnel/delete/{id}', [PersonnelController::class, 'delete']);
 
     //? Student route
@@ -149,6 +127,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/student/search/citizen-id/{citizenId}', [StudentController::class, 'citizenSearch']);
     Route::post('/student/delete/{id}', [StudentController::class, 'delete']);
     Route::get('/student/count', [StudentController::class, 'count']);
+
+    //? Alumni route
+    Route::get('/alumnus', [AlumnusController::class, 'index']); //? Paginate
+    Route::get('/alumni/show/{id}', [AlumnusController::class, 'show']);
+    Route::post('/alumni/new', [AlumnusController::class, 'store']);
+    Route::post('/alumni/update/{id}', [AlumnusController::class, 'update']);
+    Route::get('/alumni/search/{keyword}', [AlumnusController::class, 'search']); //? Paginate
+    Route::post('/alumni/delete/{id}', [AlumnusController::class, 'delete']);
 
     //? Subject route
     Route::get('/subjects', [SubjectController::class, 'index']); //? Paginate
@@ -176,4 +162,22 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/banner/update/{id}', [BannerController::class, 'update']);
     Route::post('/banner/delete/{id}', [BannerController::class, 'delete']);
     Route::get('/banner/count', [BannerController::class, 'count']);
+
+    //? News route for web and mobile app
+    Route::get('/news/show/{id}', [InformationController::class, 'show']); //? For public
+    Route::get('/news/limit/{number}', [InformationController::class, 'newsLimit']); //? Limit
+
+    //? News route for web
+    Route::get('/news', [InformationController::class, 'index']); //? Paginate (For public)
+    Route::get('/news/private', [InformationController::class, 'indexPrivate']); //? Paginate (For private)
+    Route::get('/news/show/private/{id}', [InformationController::class, 'showPrivate']); //? For private for dashboard
+    Route::get('/news/search/{keyword}', [InformationController::class, 'search']); //? Paginate (For public)
+    Route::get('/news/search/private/{keyword}', [InformationController::class, 'searchPrivate']); //? Paginate (For private for dashboard)
+    Route::post('/news/new', [InformationController::class, 'store']);
+    Route::post('/news/update/{id}', [InformationController::class, 'update']);
+    Route::post('/news/delete/{id}', [InformationController::class, 'delete']);
+
+    //? News route for mobile app
+    Route::get('/news/all', [InformationController::class, 'indexAll']); //? Get all
+    Route::get('/news/search/all/{keyword}', [InformationController::class, 'searchAll']); //? Get all
 });

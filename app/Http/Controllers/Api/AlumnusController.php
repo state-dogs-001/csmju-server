@@ -46,8 +46,9 @@ class AlumnusController extends Controller
     {
         $alumnus = Alumnus::where('is_del', false)
             ->where(function ($query) use ($keyword) {
-                $query->where('student_code', 'LIKE', "%$keyword%")
-                    ->orWhere('name', 'LIKE', "%$keyword%");
+                $query->where('name', 'LIKE', "%$keyword%")
+                    ->orWhere('work_place', 'LIKE', "%$keyword%")
+                    ->orWhere('generation', 'LIKE', "%$keyword%");
             })
             ->orderBy('id', 'desc')
             ->paginate(20);
@@ -58,63 +59,43 @@ class AlumnusController extends Controller
     //? Store
     public function store(Request $request)
     {
-        //? Check if alumnus already exists but is_del is true
-        $dbCheck = Alumnus::where('student_code', $request->student_code)
-            ->where('is_del', true)
-            ->first();
+        $fields = $request->validate([
+            'name' => 'required|string|max:255',
+            'generation' => 'required|string|max:255',
+            'work_place' => 'required|string|max:255',
+            'job_title' => 'required|string|max:255',
+            'caption' => 'nullable|string',
+            'image_profile' => 'nullable|image|mimes:jpeg,png,jpg|max:3584',
+        ]);
 
-        if ($dbCheck) {
-            //? Update is_del to false
-            $dbCheck->update([
-                'is_del' => false
-            ]);
-
-            return response()->json([
-                'success' => true,
-                'status' => 'update',
-                'message' => 'อัพเดทข้อมูลสำเร็จ',
-            ], 200);
-        } else {
-            $fields = $request->validate([
-                'student_code' => 'required|string|unique:alumni,student_code|max:10',
-                'name' => 'required|string|max:255',
-                'work_place' => 'required|string|max:255',
-                'job_title' => 'required|string|max:255',
-                'caption' => 'nullable|string',
-                'tel_number' => 'nullable|string|max:10',
-                'image_profile' => 'image|mimes:jpeg,png,jpg,gif,svg|max:3584',
-            ]);
-
-            //? Upload image
-            if ($request->hasFile('image_profile')) {
-                $image = $request->file('image_profile');
-                $imageName = 'profile-' . time() . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('images/alumnus'), $imageName);
-                $fields['image_profile'] = $imageName;
-            }
-
-            //? create alumni
-            $alumnus = Alumnus::create($fields);
-
-            return response()->json([
-                'success' => true,
-                'message' => 'บันทึกข้อมูลสำเร็จ',
-                'alumnus' => $alumnus,
-            ], 200);
+        //? Upload image
+        if ($request->hasFile('image_profile')) {
+            $image = $request->file('image_profile');
+            $imageName = 'profile-' . time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('images/alumnus'), $imageName);
+            $fields['image_profile'] = $imageName;
         }
+
+        //? create alumni
+        $alumnus = Alumnus::create($fields);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'บันทึกข้อมูลสำเร็จ',
+            'alumnus' => $alumnus,
+        ], 200);
     }
 
     //? Update
     public function update(Request $request, $id)
     {
         $fields = $request->validate([
-            'student_code' => 'required|string|unique:alumni,student_code|max:10' . $id,
             'name' => 'required|string|max:255',
+            'generation' => 'required|string|max:255',
             'work_place' => 'required|string|max:255',
             'job_title' => 'required|string|max:255',
             'caption' => 'nullable|string',
-            'tel_number' => 'nullable|string|max:10',
-            'image_profile' => 'image|mimes:jpeg,png,jpg,gif,svg|max:3584',
+            'image_profile' => 'nullable|image|mimes:jpeg,png,jpg|max:3584',
         ]);
 
         //? Find alumni by id for update

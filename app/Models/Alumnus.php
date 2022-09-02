@@ -10,12 +10,11 @@ class Alumnus extends Model
     use HasFactory;
 
     protected $fillable = [
-        'student_code',
         'name',
+        'generation',
         'work_place',
         'job_title',
         'caption',
-        'tel_number',
         'image_profile',
         'is_del',
     ];
