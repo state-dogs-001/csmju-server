@@ -12,12 +12,28 @@ use App\Models\PersonnelStatus;
 
 class PersonnelController extends Controller
 {
-    //? Show all personnels
+    //? Show all personnels paginate
     public function index()
     {
         //? Join table personnels and personnel_status
         $personnels = Personnel::join('personnel_status', 'personnels.work_status', '=', 'personnel_status.id')
-            ->select('personnels.*', 'personnel_status.status')
+            ->select(
+                'personnels.id',
+                'personnels.citizen_id',
+                'personnels.name_title',
+                'personnels.name_th',
+                'personnels.name_en',
+                'personnels.position_academic',
+                'personnels.position_manager',
+                'personnels.image_profile',
+                'personnels.email',
+                'personnels.tel_number',
+                'personnels.education',
+                'personnels.personnel_type',
+                'personnels.academic_type',
+                'personnel_status.status',
+                'personnels.is_del',
+            )
             ->where('personnels.is_del', false)
             ->orderBy('personnels.id', 'desc')
             ->paginate(20);
@@ -25,12 +41,61 @@ class PersonnelController extends Controller
         return response()->json($personnels, 200);
     }
 
+    //? Show all personnels
+    public function indexAll()
+    {
+        //? Join table personnels and personnel_status
+        $personnels = Personnel::join('personnel_status', 'personnels.work_status', '=', 'personnel_status.id')
+            ->select(
+                'personnels.id',
+                'personnels.citizen_id',
+                'personnels.name_title',
+                'personnels.name_th',
+                'personnels.name_en',
+                'personnels.position_academic',
+                'personnels.position_manager',
+                'personnels.image_profile',
+                'personnels.email',
+                'personnels.tel_number',
+                'personnels.education',
+                'personnels.personnel_type',
+                'personnels.academic_type',
+                'personnel_status.status',
+                'personnels.is_del',
+            )
+            ->where('personnels.is_del', false)
+            ->where('personnels.work_status', 1)
+            ->orderBy('personnels.id', 'desc')
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $personnels,
+        ], 200);
+    }
+
     //? Show a personnel
     public function show($id)
     {
         //? Join table personnels and personnel_status
         $personnel = Personnel::join('personnel_status', 'personnels.work_status', '=', 'personnel_status.id')
-            ->select('personnels.*', 'personnel_status.status')
+            ->select(
+                'personnels.id',
+                'personnels.citizen_id',
+                'personnels.name_title',
+                'personnels.name_th',
+                'personnels.name_en',
+                'personnels.position_academic',
+                'personnels.position_manager',
+                'personnels.image_profile',
+                'personnels.email',
+                'personnels.tel_number',
+                'personnels.education',
+                'personnels.personnel_type',
+                'personnels.academic_type',
+                'personnel_status.status',
+                'personnels.is_del',
+            )
             ->where('personnels.id', $id)
             ->where('personnels.is_del', false)
             ->first();
@@ -73,13 +138,30 @@ class PersonnelController extends Controller
     {
         //? Join table personnels and personnel_status
         $personnels = Personnel::join('personnel_status', 'personnels.work_status', '=', 'personnel_status.id')
-            ->select('personnels.*', 'personnel_status.status')
+            ->select(
+                'personnels.id',
+                'personnels.citizen_id',
+                'personnels.name_title',
+                'personnels.name_th',
+                'personnels.name_en',
+                'personnels.position_academic',
+                'personnels.position_manager',
+                'personnels.image_profile',
+                'personnels.email',
+                'personnels.tel_number',
+                'personnels.education',
+                'personnels.personnel_type',
+                'personnels.academic_type',
+                'personnel_status.status',
+                'personnels.is_del',
+            )
             ->where('personnels.is_del', false)
             ->where(function ($query) use ($keyword) {
                 $query->where('personnels.citizen_id', 'LIKE', "%$keyword%")
                     ->orWhere('personnels.name_th', 'LIKE', "%$keyword%")
                     ->orWhere('personnels.name_en', 'LIKE', "%$keyword%")
-                    ->orWhere('personnels.position_academic', 'LIKE', "%$keyword%");
+                    ->orWhere('personnels.position_academic', 'LIKE', "%$keyword%")
+                    ->orWhere('personnels.position_manager', 'LIKE', "%$keyword%");
             })
             ->orderBy('personnels.id', 'desc')
             ->paginate(20);
@@ -105,7 +187,7 @@ class PersonnelController extends Controller
                 'personnels.tel_number',
                 'personnels.education',
                 'personnels.academic_type',
-                'personnel_status.status'
+                'personnels.is_del'
             )
             ->where('personnels.is_del', false)
             ->where('personnels.personnel_type', 'อาจารย์')
@@ -143,7 +225,7 @@ class PersonnelController extends Controller
                 'personnels.tel_number',
                 'personnels.education',
                 'personnels.academic_type',
-                'personnel_status.status'
+                'personnels.is_del'
             )
             ->where('personnels.is_del', false)
             ->where('personnels.personnel_type', 'เจ้าหน้าที่')
@@ -168,7 +250,23 @@ class PersonnelController extends Controller
     {
         //? Join table personnels and personnel_status
         $personnel = Personnel::join('personnel_status', 'personnels.work_status', '=', 'personnel_status.id')
-            ->select('personnels.*', 'personnel_status.status')
+            ->select(
+                'personnels.id',
+                'personnels.citizen_id',
+                'personnels.name_title',
+                'personnels.name_th',
+                'personnels.name_en',
+                'personnels.position_academic',
+                'personnels.position_manager',
+                'personnels.image_profile',
+                'personnels.email',
+                'personnels.tel_number',
+                'personnels.education',
+                'personnels.personnel_type',
+                'personnels.academic_type',
+                'personnel_status.status',
+                'personnels.is_del',
+            )
             ->where('personnels.is_del', false)
             ->where('personnels.citizen_id', $citizenId)
             ->first();
