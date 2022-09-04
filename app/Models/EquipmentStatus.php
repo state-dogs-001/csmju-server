@@ -10,4 +10,8 @@ class EquipmentStatus extends Model
     use HasFactory;
 
     protected $table = 'equipment_status';
+
+    protected $fillable = [
+        'status_name',
+    ];
 }
