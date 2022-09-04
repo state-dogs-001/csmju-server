@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::table('personnels', function (Blueprint $table) {
             $table->unsignedBigInteger('work_status')->comment('สถานะการทำงาน');
-            $table->foreign('work_status')->references('id')->on('personnel_status');
+            $table->foreign('work_status')->references('id')->on('personnel_status')->onDelete('cascade');
             $table->boolean('is_del')->default(false)->comment('สถานะการลบข้อมูล');
             $table->timestamps();
         });

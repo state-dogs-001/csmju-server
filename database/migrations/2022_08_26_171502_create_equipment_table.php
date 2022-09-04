@@ -15,16 +15,17 @@ return new class extends Migration
     {
         Schema::create('equipment', function (Blueprint $table) {
             $table->id();
-            $table->string('equipment_code')->unique()->comment('รหัสครุภัณฑ์');
-            $table->string('quantity')->nullable()->comment('จำนวนครุภัณฑ์');
-            $table->string('name')->nullable()->comment('ชื่อครุภัณฑ์');
-            $table->string('brand')->nullable()->comment('ยี่ห้อครุภัณฑ์');
-            $table->text('detail')->nullable()->comment('รายละเอียดครุภัณฑ์');
-            $table->string('serial_number')->nullable()->comment('หมายเลขครุภัณฑ์');
-            $table->double('price')->nullable()->comment('ราคาครุภัณฑ์');
-            $table->date('purchase_date')->nullable()->comment('วันที่ซื้อครุภัณฑ์');
-            $table->string('purchase_at')->nullable()->comment('ซื้อครุภัณฑ์ที่ไหน');
-            $table->string('classroom_code')->nullable()->comment('รหัสห้องเรียนที่ใช้เก็บครุภัณฑ์');
+            $table->string('equip_id')->unique()->comment('รหัสครุภัณฑ์');
+            $table->string('serial_number')->nullable()->comment('ซีเรียลนัมเบอร์');
+            $table->string('name')->comment('ชื่อครุภัณฑ์');
+            $table->string('model')->nullable()->comment('รุ่น/ยี่ห้อ');
+            $table->text('detail')->nullable()->comment('รายละเอียด');
+            $table->double('price')->comment('ราคา');
+            $table->string('quantity')->comment('จำนวน');
+            $table->string('main_type')->comment('ประเภทครุภัณฑ์');
+            $table->string('sub_type')->nullable()->comment('ประเภทย่อย');
+            $table->date('purchase_date')->comment('วันที่ซื้อ');
+            $table->string('purchase_from')->nullable()->comment('ซื้อจาก');
             $table->text('note')->nullable()->comment('หมายเหตุ');
         });
     }

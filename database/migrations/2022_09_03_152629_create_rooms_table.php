@@ -19,14 +19,14 @@ return new class extends Migration
             $table->string('room_name_th')->comment('ชื่อห้องภาษาไทย');
             $table->string('room_name_en')->nullable()->comment('ชื่อห้องภาษาอังกฤษ');
             $table->unsignedBigInteger('personnel_id')->comment('ผู้ดูแลห้อง');
-            $table->foreign('personnel_id')->references('id')->on('personnels');
+            $table->foreign('personnel_id')->references('id')->on('personnels')->onDelete('cascade');
             $table->unsignedBigInteger('building_id')->comment('อาคาร');
-            $table->foreign('building_id')->references('id')->on('buildings');
+            $table->foreign('building_id')->references('id')->on('buildings')->onDelete('cascade');
             $table->string('floor')->comment('ชั้น');
             $table->integer('amount_seat')->nullable()->comment('จำนวนที่นั่ง');
             $table->string('image')->nullable()->comment('รูปภาพห้อง');
             $table->unsignedBigInteger('type_room_id')->comment('ประเภทห้อง');
-            $table->foreign('type_room_id')->references('id')->on('type_rooms');
+            $table->foreign('type_room_id')->references('id')->on('type_rooms')->onDelete('cascade');
             $table->boolean('is_del')->default(false)->comment('สถานะการลบ');
             $table->timestamps();
         });

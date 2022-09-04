@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             PersonnelStatusSeeder::class,
             BuildingSeeder::class,
             TypeRoomSeeder::class,
+            EquipmentStatusSeeder::class,
         ]);
     }
 }

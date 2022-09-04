@@ -11,7 +11,6 @@ use App\Http\Controllers\Api\SubjectController;
 use App\Http\Controllers\Api\BannerController;
 use App\Http\Controllers\Api\SubjectResidualController;
 use App\Http\Controllers\Api\InformationController;
-// use App\Http\Controllers\Api\ClassroomController;
 use App\Http\Controllers\Api\RoomController;
 use App\Http\Controllers\Api\DocumentController;
 use App\Http\Controllers\Api\ProjectController;
@@ -51,26 +50,6 @@ Route::get('/activity/search/private/{keyword}', [ActivityController::class, 'se
 Route::post('/activity/new', [ActivityController::class, 'store']);
 Route::post('/activity/update/{id}', [ActivityController::class, 'update']);
 Route::post('/activity/delete/{id}', [ActivityController::class, 'delete']);
-
-//? Classroom route
-// Route::get('/classrooms', [ClassroomController::class, 'index']); //? Paginate
-// Route::get('/classroom/show/{id}', [ClassroomController::class, 'show']);
-// Route::post('/classroom/new', [ClassroomController::class, 'store']);
-// Route::post('/classroom/update/{id}', [ClassroomController::class, 'update']);
-// Route::get('/classroom/search/{keyword}', [ClassroomController::class, 'search']); //? Paginate
-// Route::get('/classroom/filter/room-type/{roomType}', [ClassroomController::class, 'filterRoomType']); //? Show on public pages
-// Route::post('/classroom/delete/{id}', [ClassroomController::class, 'delete']);
-
-//? Room route
-Route::get('/rooms', [RoomController::class, 'index']); //? Paginate
-Route::get('/room/show/{id}', [RoomController::class, 'show']);
-Route::get('/room/show/update/{id}', [RoomController::class, 'showUpdate']);
-Route::get('/room/search/{keyword}', [RoomController::class, 'search']); //? Paginate
-Route::get('/room/lab', [RoomController::class, 'labRoom']);
-Route::get('/room/lecture', [RoomController::class, 'lectureRoom']);
-Route::post('/room/new', [RoomController::class, 'store']);
-Route::post('/room/update/{id}', [RoomController::class, 'update']);
-Route::post('/room/delete/{id}', [RoomController::class, 'delete']);
 
 //? Material route
 Route::get('/materials', [MaterialController::class, 'index']); //? Paginate (Public)
@@ -166,6 +145,19 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/residual/update/status/{id}', [SubjectResidualController::class, 'updateStatus']);
     Route::get('/residual/show/update/{id}', [SubjectResidualController::class, 'residualForUpdate']);
     Route::get('/residual/show/{id}', [SubjectResidualController::class, 'residualForShow']);
+
+    //? Room route
+    Route::get('/rooms', [RoomController::class, 'index']); //? Paginate
+    Route::get('/room/show/{id}', [RoomController::class, 'show']);
+    Route::get('/room/show/update/{id}', [RoomController::class, 'showUpdate']);
+    Route::get('/room/search/{keyword}', [RoomController::class, 'search']); //? Paginate
+    Route::get('/room/lab', [RoomController::class, 'labRoom']);
+    Route::get('/room/lecture', [RoomController::class, 'lectureRoom']);
+    Route::post('/room/new', [RoomController::class, 'store']);
+    Route::post('/room/update/{id}', [RoomController::class, 'update']);
+    Route::post('/room/delete/{id}', [RoomController::class, 'delete']);
+    Route::get('/room/type', [RoomController::class, 'typeRoom']);
+    Route::get('/room/building', [RoomController::class, 'building']);
 
     //? Banners route
     Route::get('/banners', [BannerController::class, 'indexPublic']); //? Public

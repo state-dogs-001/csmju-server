@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 use App\Models\Room;
+use App\Models\TypeRoom;
+use App\Models\Building;
 
 class RoomController extends Controller
 {
@@ -37,6 +39,28 @@ class RoomController extends Controller
             ->paginate(20);
 
         return response()->json($rooms, 200);
+    }
+
+    //? Building
+    public function building()
+    {
+        $buildings = Building::all();
+
+        return response()->json([
+            'success' => true,
+            'data' => $buildings,
+        ], 200);
+    }
+
+    //? type room
+    public function typeRoom()
+    {
+        $typeRooms = TypeRoom::all();
+
+        return response()->json([
+            'success' => true,
+            'data' => $typeRooms,
+        ], 200);
     }
 
     //? Show
@@ -121,7 +145,8 @@ class RoomController extends Controller
             ->where(function ($query) use ($keyword) {
                 $query->where('rooms.room_id', 'LIKE', "%$keyword%")
                     ->orWhere('rooms.room_name_th', 'LIKE', "%$keyword%")
-                    ->orWhere('rooms.room_name_en', 'LIKE', "%$keyword%");
+                    ->orWhere('rooms.room_name_en', 'LIKE', "%$keyword%")
+                    ->orWhere('type_rooms.type_room', 'LIKE', "%$keyword%");
             })
             ->where('rooms.is_del', false)
             ->orderBy('rooms.id', 'desc')
