@@ -19,6 +19,7 @@ use App\Http\Controllers\Api\ActivityController;
 use App\Http\Controllers\Api\AlumnusController;
 use App\Http\Controllers\Api\MaterialController;
 use App\Http\Controllers\Api\MaterialDisbursalController;
+use App\Http\Controllers\Api\EquipmentController;
 
 //? Auth route
 Route::post('/auth/signup', [AuthController::class, 'signup']);
@@ -79,6 +80,14 @@ Route::get('/project/search/{keyword}', [ProjectController::class, 'search']); /
 Route::post('/project/delete/{id}', [ProjectController::class, 'delete']);
 
 //? Equipment route
+Route::get('/equipments', [EquipmentController::class, 'index']); //? Paginate
+Route::get('/equipment/show/{id}', [EquipmentController::class, 'show']); //? Show Read
+Route::get('/equipment/show/update/{id}', [EquipmentController::class, 'showUpdate']); //? Show Update
+Route::get('/equipment/search/{keyword}', [EquipmentController::class, 'search']); //? Paginate
+Route::get('/equipment/status', [EquipmentController::class, 'equipmentStatus']);
+Route::post('/equipment/new', [EquipmentController::class, 'store']);
+Route::post('/equipment/update/{id}', [EquipmentController::class, 'update']);
+Route::post('/equipment/delete/{id}', [EquipmentController::class, 'delete']);
 
 //? Equipment borrow route
 
@@ -148,16 +157,17 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //? Room route
     Route::get('/rooms', [RoomController::class, 'index']); //? Paginate
-    Route::get('/room/show/{id}', [RoomController::class, 'show']);
-    Route::get('/room/show/update/{id}', [RoomController::class, 'showUpdate']);
+    Route::get('/rooms/all', [RoomController::class, 'indexAll']); //? Use for select
+    Route::get('/room/show/{id}', [RoomController::class, 'show']); //? Show Read
+    Route::get('/room/show/update/{id}', [RoomController::class, 'showUpdate']); //? Show Update
     Route::get('/room/search/{keyword}', [RoomController::class, 'search']); //? Paginate
     Route::get('/room/lab', [RoomController::class, 'labRoom']);
     Route::get('/room/lecture', [RoomController::class, 'lectureRoom']);
     Route::post('/room/new', [RoomController::class, 'store']);
     Route::post('/room/update/{id}', [RoomController::class, 'update']);
     Route::post('/room/delete/{id}', [RoomController::class, 'delete']);
-    Route::get('/room/type', [RoomController::class, 'typeRoom']);
-    Route::get('/room/building', [RoomController::class, 'building']);
+    Route::get('/room/type', [RoomController::class, 'typeRoom']); //? Use for select
+    Route::get('/room/building', [RoomController::class, 'building']); //? Use for select
 
     //? Banners route
     Route::get('/banners', [BannerController::class, 'indexPublic']); //? Public

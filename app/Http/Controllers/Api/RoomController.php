@@ -41,6 +41,37 @@ class RoomController extends Controller
         return response()->json($rooms, 200);
     }
 
+    //? Get all room for select
+    public function indexAll()
+    {
+        //? Join table personnel, building, type_room
+        $rooms = Room::join('personnels', 'personnels.id', '=', 'rooms.personnel_id')
+            ->join('buildings', 'buildings.id', '=', 'rooms.building_id')
+            ->join('type_rooms', 'type_rooms.id', '=', 'rooms.type_room_id')
+            ->select(
+                'rooms.id',
+                'rooms.room_id',
+                'rooms.room_name_th',
+                'rooms.room_name_en',
+                'rooms.image',
+                'personnels.name_title as personnel_name_title',
+                'personnels.name_th as personnel_name_th',
+                'rooms.amount_seat',
+                'rooms.floor',
+                'buildings.building',
+                'type_rooms.type_room',
+                'rooms.is_del',
+            )
+            ->where('rooms.is_del', false)
+            ->orderBy('rooms.id', 'asc')
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $rooms
+        ], 200);
+    }
+
     //? Building
     public function building()
     {
