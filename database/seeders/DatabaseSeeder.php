@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             PersonnelsSeeder::class,
             RoomsSeeder::class,
             EquipmentSeeder::class,
+            UserSeeder::class,
         ]);
     }
 }
