@@ -26,6 +26,7 @@ return new class extends Migration
             $table->string('sub_type')->nullable()->comment('ประเภทย่อย');
             $table->date('purchase_date')->comment('วันที่ซื้อ');
             $table->string('purchase_from')->nullable()->comment('ซื้อจาก');
+            $table->string('budget')->comment('งบประมาณจาก');
             $table->text('note')->nullable()->comment('หมายเหตุ');
         });
     }

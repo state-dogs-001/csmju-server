@@ -29,6 +29,7 @@ class EquipmentController extends Controller
                 'equipment.sub_type',
                 'equipment.purchase_date',
                 'equipment.purchase_from',
+                'equipment.budget',
                 'equipment.note',
                 'equipment_status.status',
                 'personnels.name_title',
@@ -38,7 +39,7 @@ class EquipmentController extends Controller
                 'equipment.is_del'
             )
             ->where('equipment.is_del', false)
-            ->orderBy('equipment.id', 'desc')
+            ->orderBy('equipment.purchase_date', 'desc')
             ->paginate(20);
 
         return response()->json($equipments, 200);
@@ -63,6 +64,7 @@ class EquipmentController extends Controller
                 'equipment.sub_type',
                 'equipment.purchase_date',
                 'equipment.purchase_from',
+                'equipment.budget',
                 'equipment.note',
                 'equipment_status.status',
                 'personnels.name_title',
@@ -107,8 +109,14 @@ class EquipmentController extends Controller
     }
 
     //? Search (Paginate)
-    public function search($keyword)
+    public function search(Request $request)
     {
+        $request->validate([
+            'search' => 'required'
+        ]);
+        //? Use Request because some keyword has '/' it cannot use with api
+        $keyword = $request->search;
+
         $equipment = Equipment::join('equipment_status', 'equipment_status.id', '=', 'equipment.status_id')
             ->join('personnels', 'personnels.id', '=', 'equipment.personnel_id')
             ->join('rooms', 'rooms.room_id', '=', 'equipment.room_id')
@@ -125,6 +133,7 @@ class EquipmentController extends Controller
                 'equipment.sub_type',
                 'equipment.purchase_date',
                 'equipment.purchase_from',
+                'equipment.budget',
                 'equipment.note',
                 'equipment_status.status',
                 'personnels.name_title',
@@ -135,13 +144,15 @@ class EquipmentController extends Controller
             )
             ->where('equipment.is_del', false)
             ->where(function ($query) use ($keyword) {
-                $query->where('equipment.equip_id', ' LIKE', "%$keyword%")
+                $query->where('equipment.equip_id', 'LIKE', "%$keyword%")
                     ->orWhere('equipment.name', 'LIKE', "%$keyword%")
                     ->orWhere('equipment.main_type', 'LIKE', "%$keyword%")
                     ->orWhere('equipment.sub_type', 'LIKE', "%$keyword%")
+                    ->orWhere('equipment.budget', 'LIKE', "%$keyword%")
                     ->orWhere('rooms.room_id', 'LIKE', "%$keyword%")
                     ->orWhere('rooms.room_name_th', 'LIKE', "%$keyword%");
             })
+            ->orderBy('equipment.purchase_date', 'desc')
             ->paginate(20);
 
         return response()->json($equipment, 200);
@@ -173,6 +184,7 @@ class EquipmentController extends Controller
             'sub_type' => 'nullable|string',
             'purchase_date' => 'required|date|date_format:Y-m-d',
             'purchase_from' => 'nullable|string',
+            'budget' => 'required|string',
             'note' => 'nullable|string',
             'status_id' => 'required|integer',
             'personnel_id' => 'required|integer',
@@ -206,6 +218,7 @@ class EquipmentController extends Controller
             'sub_type' => 'nullable|string',
             'purchase_date' => 'required|date|date_format:Y-m-d',
             'purchase_from' => 'nullable|string',
+            'budget' => 'required|string',
             'note' => 'nullable|string',
             'status_id' => 'required|integer',
             'personnel_id' => 'required|integer',

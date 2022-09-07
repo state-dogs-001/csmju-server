@@ -79,16 +79,6 @@ Route::post('/project/update/{id}', [ProjectController::class, 'update']);
 Route::get('/project/search/{keyword}', [ProjectController::class, 'search']); //? Paginate
 Route::post('/project/delete/{id}', [ProjectController::class, 'delete']);
 
-//? Equipment route
-Route::get('/equipments', [EquipmentController::class, 'index']); //? Paginate
-Route::get('/equipment/show/{id}', [EquipmentController::class, 'show']); //? Show Read
-Route::get('/equipment/show/update/{id}', [EquipmentController::class, 'showUpdate']); //? Show Update
-Route::get('/equipment/search/{keyword}', [EquipmentController::class, 'search']); //? Paginate
-Route::get('/equipment/status', [EquipmentController::class, 'equipmentStatus']);
-Route::post('/equipment/new', [EquipmentController::class, 'store']);
-Route::post('/equipment/update/{id}', [EquipmentController::class, 'update']);
-Route::post('/equipment/delete/{id}', [EquipmentController::class, 'delete']);
-
 //? Equipment borrow route
 
 //? Maintenance route
@@ -168,6 +158,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/room/delete/{id}', [RoomController::class, 'delete']);
     Route::get('/room/type', [RoomController::class, 'typeRoom']); //? Use for select
     Route::get('/room/building', [RoomController::class, 'building']); //? Use for select
+
+    //? Equipment route
+    Route::get('/equipments', [EquipmentController::class, 'index']); //? Paginate
+    Route::get('/equipment/show/{id}', [EquipmentController::class, 'show']); //? Show Read
+    Route::get('/equipment/show/update/{id}', [EquipmentController::class, 'showUpdate']); //? Show Update
+    Route::post('/equipment/search', [EquipmentController::class, 'search']); //? Paginate
+    Route::get('/equipment/status', [EquipmentController::class, 'equipmentStatus']);
+    Route::post('/equipment/new', [EquipmentController::class, 'store']);
+    Route::post('/equipment/update/{id}', [EquipmentController::class, 'update']);
+    Route::post('/equipment/delete/{id}', [EquipmentController::class, 'delete']);
 
     //? Banners route
     Route::get('/banners', [BannerController::class, 'indexPublic']); //? Public

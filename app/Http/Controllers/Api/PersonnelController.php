@@ -158,7 +158,7 @@ class PersonnelController extends Controller
             ->where('personnels.is_del', false)
             ->where(function ($query) use ($keyword) {
                 $query->where('personnels.citizen_id', 'LIKE', "%$keyword%")
-                    ->orWhere('personnels.name_th', 'LIKE', "%$keyword%")
+                    ->orWhere(DB::raw('CONCAT(personnels.name_title, personnels.name_th)'), 'LIKE', "%$keyword%")
                     ->orWhere('personnels.name_en', 'LIKE', "%$keyword%")
                     ->orWhere('personnels.position_academic', 'LIKE', "%$keyword%")
                     ->orWhere('personnels.position_manager', 'LIKE', "%$keyword%");

@@ -23,6 +23,7 @@ class Equipment extends Model
         'sub_type',
         'purchase_date',
         'purchase_from',
+        'budget',
         'note',
         'status_id',
         'personnel_id',
