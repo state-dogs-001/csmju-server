@@ -71,15 +71,6 @@ Route::get('/material/disbursal/filter/{citizen_id}', [MaterialDisbursalControll
 Route::post('/material/disbursal/new', [MaterialDisbursalController::class, 'store']);
 Route::post('/material/disbursal/delete/{id}', [MaterialDisbursalController::class, 'delete']);
 
-//? Project library route
-Route::get('/projects', [ProjectController::class, 'index']); //? Paginate
-Route::get('/project/show/{id}', [ProjectController::class, 'show']); //? Show for update
-Route::get('/project/show/read/{id}', [ProjectController::class, 'showRead']); //? Show for read
-Route::post('/project/new', [ProjectController::class, 'store']);
-Route::post('/project/update/{id}', [ProjectController::class, 'update']);
-Route::get('/project/search/{keyword}', [ProjectController::class, 'search']); //? Paginate
-Route::post('/project/delete/{id}', [ProjectController::class, 'delete']);
-
 //? Equipment borrow route
 
 //? Maintenance route
@@ -168,6 +159,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/equipment/update/{id}', [EquipmentController::class, 'update']);
     Route::post('/equipment/delete/{id}', [EquipmentController::class, 'delete']);
 
+    //? Project library route
+    Route::get('/projects', [ProjectController::class, 'index']); //? Paginate
+    Route::get('/project/show/{id}', [ProjectController::class, 'show']); //? Show for update
+    Route::get('/project/show/read/{id}', [ProjectController::class, 'showRead']); //? Show for read
+    Route::post('/project/new', [ProjectController::class, 'store']);
+    Route::post('/project/update/{id}', [ProjectController::class, 'update']);
+    Route::get('/project/search/{keyword}', [ProjectController::class, 'search']); //? Paginate
+    Route::post('/project/delete/{id}', [ProjectController::class, 'delete']);
+
     //? Banners route
     Route::get('/banners', [BannerController::class, 'indexPublic']); //? Public
     Route::get('/banners/private', [BannerController::class, 'index']); //? Private (Paginate)
@@ -193,7 +193,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //? News route for mobile app
     Route::get('/news/all', [InformationController::class, 'indexAll']); //? Get all
-    Route::get('/news/search/all/{keyword}', [InformationController::class, 'searchAll']); 
+    Route::get('/news/search/all/{keyword}', [InformationController::class, 'searchAll']);
 
     //? Complain route
     Route::get('/complains', [ComplainController::class, 'index']); //? Paginate

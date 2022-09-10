@@ -14,15 +14,21 @@ class ProjectController extends Controller
     //? Index
     public function index()
     {
-        $projects = ProjectLibrary::join('personnels', 'project_libraries.chairman', '=', 'personnels.id')
+        $projects = ProjectLibrary::leftJoin('personnels as chairman', 'chairman.id', '=', 'project_libraries.chairman')
+            ->leftJoin('personnels as director_1', 'director_1.id', '=', 'project_libraries.director_1')
+            ->leftJoin('personnels as director_2', 'director_2.id', '=', 'project_libraries.director_2')
             ->select(
                 'project_libraries.id',
                 'project_libraries.name',
                 'project_libraries.years',
                 'project_libraries.file',
-                'personnels.name_title as personnel_name_title',
-                'personnels.name_th as personnel_name',
-                'project_libraries.type',
+                'chairman.name_title as chairman_name_title',
+                'chairman.name_th as chairman_name',
+                'director_1.name_title as director_1_name_title',
+                'director_1.name_th as director_1_name',
+                'director_2.name_title as director_2_name_title',
+                'director_2.name_th as director_2_name',
+                'project_libraries.detail',
                 'project_libraries.is_del',
             )
             ->where('project_libraries.is_del', false)
@@ -54,15 +60,21 @@ class ProjectController extends Controller
     //? Show for read
     public function showRead($id)
     {
-        $project = ProjectLibrary::join('personnels', 'project_libraries.chairman', '=', 'personnels.id')
+        $project = ProjectLibrary::leftJoin('personnels as chairman', 'chairman.id', '=', 'project_libraries.chairman')
+            ->leftJoin('personnels as director_1', 'director_1.id', '=', 'project_libraries.director_1')
+            ->leftJoin('personnels as director_2', 'director_2.id', '=', 'project_libraries.director_2')
             ->select(
                 'project_libraries.id',
                 'project_libraries.name',
                 'project_libraries.years',
                 'project_libraries.file',
-                'personnels.name_title as personnel_name_title',
-                'personnels.name_th as personnel_name',
-                'project_libraries.type',
+                'chairman.name_title as chairman_name_title',
+                'chairman.name_th as chairman_name',
+                'director_1.name_title as director_1_name_title',
+                'director_1.name_th as director_1_name',
+                'director_2.name_title as director_2_name_title',
+                'director_2.name_th as director_2_name',
+                'project_libraries.detail',
                 'project_libraries.is_del',
             )
             ->where('project_libraries.is_del', false)
@@ -108,13 +120,15 @@ class ProjectController extends Controller
                 'years' => 'required|string',
                 'file' => 'required|file|mimes:pdf',
                 'chairman' => 'required|integer',
-                'type' => 'required|string',
+                'director_1' => 'nullable|integer',
+                'director_2' => 'nullable|integer',
+                'detail' => 'required|string',
             ]);
 
             //? Upload file
             if ($request->hasFile('file')) {
                 $pdf = $request->file('file');
-                $pdfName = 'project-' . $fields['project_code'] . $pdf->getClientOriginalExtension();
+                $pdfName = 'project-' . $fields['project_code'] . '.' . $pdf->getClientOriginalExtension();
                 $pdf->move(public_path('documents/projects'), $pdfName);
                 $fields['file'] = $pdfName;
             }
@@ -137,8 +151,11 @@ class ProjectController extends Controller
             'project_code' => 'required|string|unique:project_libraries,project_code,' . $id,
             'name' => 'required|string',
             'years' => 'required|string',
-            'file' => 'file|mimes:pdf',
-            'type' => 'required|string',
+            'file' => 'required|file|mimes:pdf',
+            'chairman' => 'required|integer',
+            'director_1' => 'nullable|integer',
+            'director_2' => 'nullable|integer',
+            'detail' => 'required|string',
         ]);
 
         //? Find project by id for update
@@ -172,23 +189,31 @@ class ProjectController extends Controller
     //? Search project
     public function search($keyword)
     {
-        $projects = ProjectLibrary::join('personnels', 'project_libraries.chairman', '=', 'personnels.id')
+        $projects = ProjectLibrary::leftJoin('personnels as chairman', 'chairman.id', '=', 'project_libraries.chairman')
+            ->leftJoin('personnels as director_1', 'director_1.id', '=', 'project_libraries.director_1')
+            ->leftJoin('personnels as director_2', 'director_2.id', '=', 'project_libraries.director_2')
             ->select(
                 'project_libraries.id',
                 'project_libraries.name',
                 'project_libraries.years',
                 'project_libraries.file',
-                'personnels.name_title as personnel_name_title',
-                'personnels.name_th as personnel_name',
-                'project_libraries.type',
+                'chairman.name_title as chairman_name_title',
+                'chairman.name_th as chairman_name',
+                'director_1.name_title as director_1_name_title',
+                'director_1.name_th as director_1_name',
+                'director_2.name_title as director_2_name_title',
+                'director_2.name_th as director_2_name',
+                'project_libraries.detail',
                 'project_libraries.is_del',
             )
             ->where('project_libraries.is_del', false)
             ->where(function ($query) use ($keyword) {
                 $query->where('project_libraries.project_code', 'LIKE', "%$keyword%")
                     ->orWhere('project_libraries.name', 'LIKE', "%$keyword%")
-                    ->orWhere('project_libraries.type', 'LIKE', "%$keyword%")
-                    ->orWhere('personnels.name_th', 'LIKE', "%$keyword%");
+                    ->orWhere('project_libraries.detail', 'LIKE', "%$keyword%")
+                    ->orWhere(DB::raw('CONCAT(chairman.name_title, chairman.name_th)'), 'LIKE', "%$keyword%")
+                    ->orWhere(DB::raw('CONCAT(director_1.name_title, director_1.name_th)'), 'LIKE', "%$keyword%")
+                    ->orWhere(DB::raw('CONCAT(director_2.name_title, director_2.name_th)'), 'LIKE', "%$keyword%");
             })
             ->paginate(20);
 

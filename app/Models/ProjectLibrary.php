@@ -15,7 +15,9 @@ class ProjectLibrary extends Model
         'years',
         'file',
         'chairman',
-        'type',
+        'director_1',
+        'director_2',
+        'detail',
         'is_del',
     ];
 

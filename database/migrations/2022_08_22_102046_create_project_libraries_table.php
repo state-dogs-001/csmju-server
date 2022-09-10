@@ -19,9 +19,13 @@ return new class extends Migration
             $table->string('name')->comment('ชื่อโครงงาน');
             $table->string('years')->comment('ปีการศึกษา');
             $table->string('file')->comment('ไฟล์เอกสารการทำโครงงาน');
-            $table->string('type')->comment('ประเภทโครงงาน');
+            $table->text('detail')->comment('รายละเอียดของโครงงาน');
             $table->unsignedBigInteger('chairman')->comment('ไอดีบุคลากรผู้เป็นประธานกรรมการโครงงาน');
             $table->foreign('chairman')->references('id')->on('personnels')->onDelete('cascade');
+            $table->unsignedBigInteger('director_1')->nullable()->comment('ไอดีบุคลากรผู้เป็นกรรมการโครงงานคนที่ 1');
+            $table->foreign('director_1')->references('id')->on('personnels')->onDelete('cascade');
+            $table->unsignedBigInteger('director_2')->nullable()->comment('ไอดีบุคลากรผู้เป็นกรรมการโครงงานคนที่ 2');
+            $table->foreign('director_2')->references('id')->on('personnels')->onDelete('cascade');
             $table->boolean('is_del')->default(false)->comment('สถานะการลบข้อมูล');
             $table->timestamps();
         });
