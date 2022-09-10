@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\AlumnusController;
 use App\Http\Controllers\Api\MaterialController;
 use App\Http\Controllers\Api\MaterialDisbursalController;
 use App\Http\Controllers\Api\EquipmentController;
+use App\Http\Controllers\Api\ComplainController;
 
 //? Auth route
 Route::post('/auth/signup', [AuthController::class, 'signup']);
@@ -82,8 +83,6 @@ Route::post('/project/delete/{id}', [ProjectController::class, 'delete']);
 //? Equipment borrow route
 
 //? Maintenance route
-
-//? Contact route
 
 //? Middleware group
 Route::middleware('auth:sanctum')->group(function () {
@@ -194,5 +193,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //? News route for mobile app
     Route::get('/news/all', [InformationController::class, 'indexAll']); //? Get all
-    Route::get('/news/search/all/{keyword}', [InformationController::class, 'searchAll']); //? Get all
+    Route::get('/news/search/all/{keyword}', [InformationController::class, 'searchAll']); 
+
+    //? Complain route
+    Route::get('/complains', [ComplainController::class, 'index']); //? Paginate
+    Route::get('/complain/show/{id}', [ComplainController::class, 'show']);
+    Route::post('/complain/new', [ComplainController::class, 'store']);
+    Route::post('/complain/delete/{id}', [ComplainController::class, 'delete']);
 });
