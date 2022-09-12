@@ -18,8 +18,11 @@ return new class extends Migration
             $table->string('project_code')->unique()->comment('รหัสโครงงาน');
             $table->string('name')->comment('ชื่อโครงงาน');
             $table->string('years')->comment('ปีการศึกษา');
-            $table->string('file')->comment('ไฟล์เอกสารการทำโครงงาน');
+            $table->string('file')->nullable()->comment('ไฟล์เอกสารการทำโครงงาน');
             $table->text('detail')->comment('รายละเอียดของโครงงาน');
+            $table->string('editor_1')->comment('ผู้จัดทำคนที่ 1');
+            $table->string('editor_2')->nullable()->comment('ผู้จัดทำคนที่ 2');
+            $table->string('editor_3')->nullable()->comment('ผู้จัดทำคนที่ 3');
             $table->unsignedBigInteger('chairman')->comment('ไอดีบุคลากรผู้เป็นประธานกรรมการโครงงาน');
             $table->foreign('chairman')->references('id')->on('personnels')->onDelete('cascade');
             $table->unsignedBigInteger('director_1')->nullable()->comment('ไอดีบุคลากรผู้เป็นกรรมการโครงงานคนที่ 1');

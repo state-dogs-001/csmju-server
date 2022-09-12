@@ -114,6 +114,7 @@ class EquipmentController extends Controller
         $request->validate([
             'search' => 'required'
         ]);
+        
         //? Use Request because some keyword has '/' it cannot use with api
         $keyword = $request->search;
 

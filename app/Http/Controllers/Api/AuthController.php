@@ -64,14 +64,14 @@ class AuthController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'อีเมลล์ไม่ถูกต้อง',
-            ], 401);
+            ], 200);
         } else {
             //! Password's incorrect
             if (!Hash::check($password, $user->password)) {
                 return response()->json([
                     'success' => false,
                     'message' => 'รหัสผ่านไม่ถูกต้อง',
-                ], 401);
+                ], 200);
             } else {
                 //? Signin successfully and create token
                 $token = $user->createToken('secret')->plainTextToken;

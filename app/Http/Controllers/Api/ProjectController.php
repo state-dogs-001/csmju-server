@@ -19,9 +19,13 @@ class ProjectController extends Controller
             ->leftJoin('personnels as director_2', 'director_2.id', '=', 'project_libraries.director_2')
             ->select(
                 'project_libraries.id',
+                'project_libraries.project_code',
                 'project_libraries.name',
                 'project_libraries.years',
                 'project_libraries.file',
+                'project_libraries.editor_1',
+                'project_libraries.editor_2',
+                'project_libraries.editor_3',
                 'chairman.name_title as chairman_name_title',
                 'chairman.name_th as chairman_name',
                 'director_1.name_title as director_1_name_title',
@@ -32,6 +36,7 @@ class ProjectController extends Controller
                 'project_libraries.is_del',
             )
             ->where('project_libraries.is_del', false)
+            ->orderBy('project_libraries.id', 'desc')
             ->paginate(20);
 
         return response()->json($projects, 200);
@@ -65,9 +70,13 @@ class ProjectController extends Controller
             ->leftJoin('personnels as director_2', 'director_2.id', '=', 'project_libraries.director_2')
             ->select(
                 'project_libraries.id',
+                'project_libraries.project_code',
                 'project_libraries.name',
                 'project_libraries.years',
                 'project_libraries.file',
+                'project_libraries.editor_1',
+                'project_libraries.editor_2',
+                'project_libraries.editor_3',
                 'chairman.name_title as chairman_name_title',
                 'chairman.name_th as chairman_name',
                 'director_1.name_title as director_1_name_title',
@@ -119,6 +128,9 @@ class ProjectController extends Controller
                 'name' => 'required|string',
                 'years' => 'required|string',
                 'file' => 'required|file|mimes:pdf',
+                'editor_1' => 'required|string',
+                'editor_2' => 'nullable|string',
+                'editor_3' => 'nullable|string',
                 'chairman' => 'required|integer',
                 'director_1' => 'nullable|integer',
                 'director_2' => 'nullable|integer',
@@ -151,7 +163,10 @@ class ProjectController extends Controller
             'project_code' => 'required|string|unique:project_libraries,project_code,' . $id,
             'name' => 'required|string',
             'years' => 'required|string',
-            'file' => 'required|file|mimes:pdf',
+            'file' => 'nullable|file|mimes:pdf',
+            'editor_1' => 'required|string',
+            'editor_2' => 'nullable|string',
+            'editor_3' => 'nullable|string',
             'chairman' => 'required|integer',
             'director_1' => 'nullable|integer',
             'director_2' => 'nullable|integer',
@@ -173,7 +188,7 @@ class ProjectController extends Controller
 
             //? Upload new file
             $pdf = $request->file('file');
-            $pdfName = 'project-' . $fields['project_code'] . $pdf->getClientOriginalExtension();
+            $pdfName = 'project-' . $fields['project_code'] . '.' . $pdf->getClientOriginalExtension();
             $pdf->move(public_path('documents/projects'), $pdfName);
             $fields['file'] = $pdfName;
         }
@@ -187,16 +202,27 @@ class ProjectController extends Controller
     }
 
     //? Search project
-    public function search($keyword)
+    public function search(Request $request)
     {
+        $field = $request->validate([
+            'keyword' => 'required|string',
+        ]);
+
+        //? Use Request because some keyword has '/' it cannot use with api
+        $keyword = $field['keyword'];
+
         $projects = ProjectLibrary::leftJoin('personnels as chairman', 'chairman.id', '=', 'project_libraries.chairman')
             ->leftJoin('personnels as director_1', 'director_1.id', '=', 'project_libraries.director_1')
             ->leftJoin('personnels as director_2', 'director_2.id', '=', 'project_libraries.director_2')
             ->select(
                 'project_libraries.id',
+                'project_libraries.project_code',
                 'project_libraries.name',
                 'project_libraries.years',
                 'project_libraries.file',
+                'project_libraries.editor_1',
+                'project_libraries.editor_2',
+                'project_libraries.editor_3',
                 'chairman.name_title as chairman_name_title',
                 'chairman.name_th as chairman_name',
                 'director_1.name_title as director_1_name_title',
@@ -215,6 +241,7 @@ class ProjectController extends Controller
                     ->orWhere(DB::raw('CONCAT(director_1.name_title, director_1.name_th)'), 'LIKE', "%$keyword%")
                     ->orWhere(DB::raw('CONCAT(director_2.name_title, director_2.name_th)'), 'LIKE', "%$keyword%");
             })
+            ->orderBy('project_libraries.id', 'desc')
             ->paginate(20);
 
         return response()->json($projects, 200);

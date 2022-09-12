@@ -165,7 +165,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/project/show/read/{id}', [ProjectController::class, 'showRead']); //? Show for read
     Route::post('/project/new', [ProjectController::class, 'store']);
     Route::post('/project/update/{id}', [ProjectController::class, 'update']);
-    Route::get('/project/search/{keyword}', [ProjectController::class, 'search']); //? Paginate
+    Route::post('/project/search', [ProjectController::class, 'search']); //? Paginate
     Route::post('/project/delete/{id}', [ProjectController::class, 'delete']);
 
     //? Banners route
