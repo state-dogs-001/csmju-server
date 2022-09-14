@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('official_documents', function (Blueprint $table) {
             $table->id();
             $table->string('name')->comment('ชื่อเอกสาร');
-            $table->string('file')->comment('ไฟล์เอกสาร');
+            $table->string('file')->nullable()->comment('ไฟล์เอกสาร');
             $table->boolean('is_show')->default(true)->comment('สถานะการแสดงข้อมูล');
             $table->boolean('is_del')->default(false)->comment('สถานะการลบข้อมูล');
             $table->timestamps();

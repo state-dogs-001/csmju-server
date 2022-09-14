@@ -16,6 +16,7 @@ class DocumentController extends Controller
     {
         $documents = OfficialDocument::where('is_del', false)
             ->where('is_show', true)
+            ->orderBy('id', 'desc')
             ->paginate(20);
 
         return response()->json($documents, 200);
@@ -25,6 +26,7 @@ class DocumentController extends Controller
     public function indexPrivate()
     {
         $documents = OfficialDocument::where('is_del', false)
+            ->orderBy('id', 'desc')
             ->paginate(20);
 
         return response()->json($documents, 200);
@@ -82,7 +84,7 @@ class DocumentController extends Controller
     {
         $fields = $request->validate([
             'name' => 'required|string|max:255',
-            'file' => 'file|mimes:pdf|max:15360',
+            'file' => 'nullable|mimes:pdf|max:15360',
             'is_show' => 'boolean',
         ]);
 
@@ -115,21 +117,35 @@ class DocumentController extends Controller
     }
 
     //? Search document by name (public)
-    public function search($keyword)
+    public function search(Request $request)
     {
+        $field = $request->validate([
+            'keyword' => 'required|string',
+        ]);
+
+        $keyword = $field['keyword'];
+
         $documents = OfficialDocument::where('is_del', false)
             ->where('is_show', true)
             ->where('name', 'LIKE', "%$keyword%")
+            ->orderBy('id', 'desc')
             ->paginate(20);
 
         return response()->json($documents, 200);
     }
 
     //? Search document by name (private)
-    public function searchPrivate($keyword)
+    public function searchPrivate(Request $request)
     {
+        $field = $request->validate([
+            'keyword' => 'required|string',
+        ]);
+
+        $keyword = $field['keyword'];
+
         $documents = OfficialDocument::where('is_del', false)
             ->where('name', 'LIKE', "%$keyword%")
+            ->orderBy('id', 'desc')
             ->paginate(20);
 
         return response()->json($documents, 200);

@@ -31,16 +31,6 @@ Route::get('/cv/search/citizen-id/{citizenId}', [CvController::class, 'citizenSe
 Route::post('/cv/new', [CvController::class, 'store']);
 Route::post('/cv/update/{id}', [CvController::class, 'update']);
 
-//? Official Document route
-Route::get('/documents', [DocumentController::class, 'index']); //? Public (Paginate)
-Route::get('/documents/private', [DocumentController::class, 'indexPrivate']); //? Private (Paginate)
-Route::get('/document/show/{id}', [DocumentController::class, 'show']); //? Private (For dashboard)
-Route::post('/document/new', [DocumentController::class, 'store']);
-Route::post('/document/update/{id}', [DocumentController::class, 'update']);
-Route::get('/document/search/{keyword}', [DocumentController::class, 'search']); //? Public (Paginate)
-Route::get('/document/search/private/{keyword}', [DocumentController::class, 'searchPrivate']); //? Private (Paginate)
-Route::post('/document/delete/{id}', [DocumentController::class, 'delete']);
-
 //? Activity route
 Route::get('/activities', [ActivityController::class, 'index']); //? Public (Paginate)
 Route::get('/activities/private', [ActivityController::class, 'indexPrivate']); //? Private (Paginate)
@@ -194,6 +184,16 @@ Route::middleware('auth:sanctum')->group(function () {
     //? News route for mobile app
     Route::get('/news/all', [InformationController::class, 'indexAll']); //? Get all
     Route::get('/news/search/all/{keyword}', [InformationController::class, 'searchAll']);
+
+    //? Official Document route
+    Route::get('/documents', [DocumentController::class, 'index']); //? Public (Paginate)
+    Route::get('/documents/private', [DocumentController::class, 'indexPrivate']); //? Private (Paginate)
+    Route::get('/document/show/{id}', [DocumentController::class, 'show']); //? Private (For dashboard)
+    Route::post('/document/new', [DocumentController::class, 'store']);
+    Route::post('/document/update/{id}', [DocumentController::class, 'update']);
+    Route::post('/document/search/{keyword}', [DocumentController::class, 'search']); //? Public (Paginate)
+    Route::post('/document/search/private/{keyword}', [DocumentController::class, 'searchPrivate']); //? Private (Paginate)
+    Route::post('/document/delete/{id}', [DocumentController::class, 'delete']);
 
     //? Complain route
     Route::get('/complains', [ComplainController::class, 'index']); //? Paginate
