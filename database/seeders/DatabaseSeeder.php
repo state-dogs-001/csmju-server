@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             RoomsSeeder::class,
             EquipmentSeeder::class,
             UserSeeder::class,
+            MaterialsSeeder::class,
         ]);
     }
 }

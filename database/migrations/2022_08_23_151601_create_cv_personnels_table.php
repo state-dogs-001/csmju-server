@@ -17,12 +17,12 @@ return new class extends Migration
             $table->id();
             $table->string('citizen_id', 13)->unique()->comment('เลขประจำตัวประชาชน');
             $table->foreign('citizen_id')->references('citizen_id')->on('personnels')->onDelete('cascade');
-            $table->text('bachelor_degree')->comment('ปริญญาตรี');
-            $table->text('masters_degree')->nullable()->comment('ปริญญาโท');
-            $table->text('doctoral_degree')->nullable()->comment('ปริญญาเอก');
+            $table->text('workplace')->nullable()->comment('สถานที่ทำงาน');
             $table->text('bio')->nullable()->comment('ประวัติโดยย่อ');
-            $table->text('experience')->nullable()->comment('ประสบการณ์การทำงาน');
-            $table->text('expertise')->nullable()->comment('ความเชี่ยวชาญ');
+            $table->json('skills')->nullable()->comment('ทักษะ');
+            $table->json('experts')->nullable()->comment('ความเชี่ยวชาญ');
+            $table->json('experiences')->nullable()->comment('ประสบการณ์การทำงาน');
+            $table->json('researches')->nullable()->comment('ผลงาน / งานวิจัย');
             $table->timestamps();
         });
     }

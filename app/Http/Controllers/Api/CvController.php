@@ -6,13 +6,30 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Models\CvPersonnel;
+use App\Models\Personnel;
 
 class CvController extends Controller
 {
     //? Search by citizen_id
     public function citizenSearch($citizenId)
     {
-        $cv = CvPersonnel::where('citizen_id', $citizenId)->first();
+        //? Join table personnels with citizen_id
+        $cv = CvPersonnel::join('personnels', 'cv_personnels.citizen_id', '=', 'personnels.citizen_id')
+            ->select(
+                'cv_personnels.*',
+                'personnels.name_title',
+                'personnels.name_th',
+                'personnels.name_en',
+                'personnels.position_academic',
+                'personnels.position_manager',
+                'personnels.image_profile',
+                'personnels.email',
+                'personnels.tel_number',
+                'personnels.education',
+                'personnels.personnel_type',
+            )
+            ->where('cv_personnels.citizen_id', $citizenId)
+            ->first();
 
         if (!$cv) {
             return response()->json([
@@ -32,12 +49,12 @@ class CvController extends Controller
     {
         $fields = $request->validate([
             'citizen_id' => 'required|string|unique:cv_personnels,citizen_id|max:13',
-            'bachelor_degree' => 'required|string',
-            'masters_degree' => 'nullable|string',
-            'doctoral_degree' => 'nullable|string',
-            'bio' => 'nullable|string',
-            'experience' => 'nullable|string',
-            'expertise' => 'nullable|string',
+            'workplace' => 'required|string',
+            'bio' => 'required|string',
+            'skills' => 'required|array',
+            'experts' => 'required|array',
+            'experiences' => 'required|array',
+            'researches' => 'required|array',
         ]);
 
         //? Create
@@ -54,12 +71,13 @@ class CvController extends Controller
     public function update(Request $request, $id)
     {
         $fields = $request->validate([
-            'bachelor_degree' => 'required|string',
-            'masters_degree' => 'nullable|string',
-            'doctoral_degree' => 'nullable|string',
-            'bio' => 'nullable|string',
-            'experience' => 'nullable|string',
-            'expertise' => 'nullable|string',
+            'citizen_id' => 'required|string|max:13',
+            'workplace' => 'required|string',
+            'bio' => 'required|string',
+            'skills' => 'required|array',
+            'experts' => 'required|array',
+            'experiences' => 'required|array',
+            'researches' => 'required|array',
         ]);
 
         $cv = CvPersonnel::findOrFail($id);
