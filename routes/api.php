@@ -26,11 +26,6 @@ use App\Http\Controllers\Api\ComplainController;
 Route::post('/auth/signup', [AuthController::class, 'signup']);
 Route::post('/auth/signin', [AuthController::class, 'signin']);
 
-//? CV route
-Route::get('/cv/search/citizen-id/{citizenId}', [CvController::class, 'citizenSearch']);
-Route::post('/cv/new', [CvController::class, 'store']);
-Route::post('/cv/update/{id}', [CvController::class, 'update']);
-
 //? Activity route
 Route::get('/activities', [ActivityController::class, 'index']); //? Public (Paginate)
 Route::get('/activities/private', [ActivityController::class, 'indexPrivate']); //? Private (Paginate)
@@ -42,17 +37,6 @@ Route::get('/activity/search/private/{keyword}', [ActivityController::class, 'se
 Route::post('/activity/new', [ActivityController::class, 'store']);
 Route::post('/activity/update/{id}', [ActivityController::class, 'update']);
 Route::post('/activity/delete/{id}', [ActivityController::class, 'delete']);
-
-//? Material route
-Route::get('/materials', [MaterialController::class, 'index']); //? Paginate (Public)
-Route::get('/materials/private', [MaterialController::class, 'indexPrivate']); //? Paginate (Private)
-Route::get('/material/show/{id}', [MaterialController::class, 'show']); //? Show material in stock
-Route::get('/material/show/update/{id}', [MaterialController::class, 'showUpdate']); //? Show for update
-Route::get('/material/search/{keyword}', [MaterialController::class, 'search']); //? Paginate (Public)
-Route::get('/material/search/private/{keyword}', [MaterialController::class, 'searchPrivate']); //? Paginate (Private)
-Route::post('/material/new', [MaterialController::class, 'store']);
-Route::post('/material/update/{id}', [MaterialController::class, 'update']);
-Route::post('/material/delete/{id}', [MaterialController::class, 'delete']);
 
 //? Metarial disbursal route
 Route::get('/materials/disbursals', [MaterialDisbursalController::class, 'index']); //? Paginate
@@ -200,4 +184,20 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/complain/show/{id}', [ComplainController::class, 'show']);
     Route::post('/complain/new', [ComplainController::class, 'store']);
     Route::post('/complain/delete/{id}', [ComplainController::class, 'delete']);
+
+    //? CV route
+    Route::get('/cv/search/citizen-id/{citizenId}', [CvController::class, 'citizenSearch']);
+    Route::post('/cv/new', [CvController::class, 'store']);
+    Route::post('/cv/update/{id}', [CvController::class, 'update']);
+
+    //? Material route
+    Route::get('/materials', [MaterialController::class, 'index']); //? Paginate (Public)
+    Route::get('/materials/private', [MaterialController::class, 'indexPrivate']); //? Paginate (Private)
+    Route::get('/material/show/{id}', [MaterialController::class, 'show']); //? Show material in stock
+    Route::get('/material/show/update/{id}', [MaterialController::class, 'showUpdate']); //? Show for update
+    Route::get('/material/search/{keyword}', [MaterialController::class, 'search']); //? Paginate (Public)
+    Route::get('/material/search/private/{keyword}', [MaterialController::class, 'searchPrivate']); //? Paginate (Private)
+    Route::post('/material/new', [MaterialController::class, 'store']);
+    Route::post('/material/update/{id}', [MaterialController::class, 'update']);
+    Route::post('/material/delete/{id}', [MaterialController::class, 'delete']);
 });

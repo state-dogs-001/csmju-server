@@ -264,6 +264,7 @@ class PersonnelController extends Controller
                 'personnels.education',
                 'personnels.personnel_type',
                 'personnels.academic_type',
+                'personnels.work_status as status_id',
                 'personnel_status.status',
                 'personnels.is_del',
             )
