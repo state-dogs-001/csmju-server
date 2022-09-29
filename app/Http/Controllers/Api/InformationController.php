@@ -17,7 +17,7 @@ class InformationController extends Controller
         $news = Information::where('is_show', true)
             ->where('is_del', false)
             ->orderBy('id', 'desc')
-            ->paginate(20);
+            ->paginate(12);
 
         return response()->json($news, 200);
     }
@@ -57,7 +57,7 @@ class InformationController extends Controller
         //? Check if news is exist
         if (!$news) {
             return response()->json([
-                'sucess' => false,
+                'success' => false,
                 'message' => 'ไม่พบข้อมูล',
             ], 200);
         } else {
@@ -78,7 +78,7 @@ class InformationController extends Controller
         //? Check if news is exist
         if (!$news) {
             return response()->json([
-                'sucess' => false,
+                'success' => false,
                 'message' => 'ไม่พบข้อมูล',
             ], 200);
         } else {
