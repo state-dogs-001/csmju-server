@@ -17,6 +17,7 @@ class SubjectResidualController extends Controller
             ->join('personnels', 'subject_residuals.personnel_id', '=', 'personnels.id')
             ->select(
                 'subject_residuals.id',
+                'students.student_code',
                 'students.name_th as student_name',
                 'students.tel_number as student_tel_number',
                 'students.email as student_email',
@@ -31,6 +32,7 @@ class SubjectResidualController extends Controller
                 'personnels.tel_number as personnel_tel_number',
                 'personnels.email as personnel_email',
                 'subject_residuals.is_del',
+                'subject_residuals.created_at as date',
             )
             ->where('subject_residuals.is_del', false)
             ->orderBy('subject_residuals.id', 'desc')
@@ -46,6 +48,7 @@ class SubjectResidualController extends Controller
             ->join('personnels', 'subject_residuals.personnel_id', '=', 'personnels.id')
             ->select(
                 'subject_residuals.id',
+                'students.student_code',
                 'students.name_th as student_name',
                 'students.tel_number as student_tel_number',
                 'students.email as student_email',
@@ -60,6 +63,7 @@ class SubjectResidualController extends Controller
                 'personnels.tel_number as personnel_tel_number',
                 'personnels.email as personnel_email',
                 'subject_residuals.is_del',
+                'subject_residuals.created_at as date',
             )
             ->where('subject_residuals.id', $id)
             ->where('subject_residuals.is_del', false)
@@ -98,6 +102,182 @@ class SubjectResidualController extends Controller
                 'data' => $residual,
             ]);
         }
+    }
+
+    //? Search by keyword
+    public function searchByKeyword(Request $request)
+    {
+        $field = $request->validate([
+            'keyword' => 'required|string',
+        ]);
+
+        $keyword = $field['keyword'];
+
+        $residuals = SubjectResidual::join('students', 'subject_residuals.student_id', '=', 'students.id')
+            ->join('personnels', 'subject_residuals.personnel_id', '=', 'personnels.id')
+            ->select(
+                'subject_residuals.id',
+                'students.student_code',
+                'students.name_th as student_name',
+                'students.tel_number as student_tel_number',
+                'students.email as student_email',
+                'subject_residuals.subject_type',
+                'subject_residuals.subject_code',
+                'subject_residuals.subject_name',
+                'subject_residuals.section',
+                'subject_residuals.detail',
+                'subject_residuals.status',
+                'personnels.name_title as personnel_name_title',
+                'personnels.name_th as personnel_name',
+                'personnels.tel_number as personnel_tel_number',
+                'personnels.email as personnel_email',
+                'subject_residuals.is_del',
+                'subject_residuals.created_at as date',
+            )
+            ->where('subject_residuals.is_del', false)
+            ->where(function ($query) use ($keyword) {
+                $query->where('students.student_code', 'LIKE', "%{$keyword}%")
+                    ->orWhere('students.name_th', 'LIKE', "%{$keyword}%")
+                    ->orWhere('subject_residuals.subject_code', 'LIKE', "%{$keyword}%")
+                    ->orWhere('subject_residuals.subject_name', 'LIKE', "%{$keyword}%");
+            })
+            ->paginate(20);
+
+        return response()->json($residuals, 200);
+    }
+
+    //? Filter by dates
+    public function datesFilter(Request $request)
+    {
+        $fields = $request->validate([
+            'start_date' => 'required|date',
+            'end_date' => 'required|date',
+            'keyword' => 'nullable|string',
+        ]);
+
+        if (!$request->has('keyword')) {
+            $residuals = SubjectResidual::join('students', 'subject_residuals.student_id', '=', 'students.id')
+                ->join('personnels', 'subject_residuals.personnel_id', '=', 'personnels.id')
+                ->select(
+                    'subject_residuals.id',
+                    'students.student_code',
+                    'students.name_th as student_name',
+                    'students.tel_number as student_tel_number',
+                    'students.email as student_email',
+                    'subject_residuals.subject_type',
+                    'subject_residuals.subject_code',
+                    'subject_residuals.subject_name',
+                    'subject_residuals.section',
+                    'subject_residuals.detail',
+                    'subject_residuals.status',
+                    'personnels.name_title as personnel_name_title',
+                    'personnels.name_th as personnel_name',
+                    'personnels.tel_number as personnel_tel_number',
+                    'personnels.email as personnel_email',
+                    'subject_residuals.is_del',
+                    'subject_residuals.created_at as date',
+                )
+                ->where('subject_residuals.is_del', false)
+                ->whereBetween('subject_residuals.created_at', [$fields['start_date'], $fields['end_date']])
+                ->paginate(20);
+        } else {
+            $residuals = SubjectResidual::join('students', 'subject_residuals.student_id', '=', 'students.id')
+                ->join('personnels', 'subject_residuals.personnel_id', '=', 'personnels.id')
+                ->select(
+                    'subject_residuals.id',
+                    'students.student_code',
+                    'students.name_th as student_name',
+                    'students.tel_number as student_tel_number',
+                    'students.email as student_email',
+                    'subject_residuals.subject_type',
+                    'subject_residuals.subject_code',
+                    'subject_residuals.subject_name',
+                    'subject_residuals.section',
+                    'subject_residuals.detail',
+                    'subject_residuals.status',
+                    'personnels.name_title as personnel_name_title',
+                    'personnels.name_th as personnel_name',
+                    'personnels.tel_number as personnel_tel_number',
+                    'personnels.email as personnel_email',
+                    'subject_residuals.is_del',
+                    'subject_residuals.created_at as date',
+                )
+                ->where('subject_residuals.is_del', false)
+                ->where(function ($query) use ($fields) {
+                    $query->where('students.student_code', 'LIKE', "%{$fields['keyword']}%")
+                        ->orWhere('students.name_th', 'LIKE', "%{$fields['keyword']}%")
+                        ->orWhere('subject_residuals.subject_code', 'LIKE', "%{$fields['keyword']}%")
+                        ->orWhere('subject_residuals.subject_name', 'LIKE', "%{$fields['keyword']}%");
+                })
+                ->whereBetween('subject_residuals.created_at', [$fields['start_date'], $fields['end_date']])
+                ->paginate(20);
+        }
+
+        return response()->json($residuals, 200);
+    }
+
+    //? Search by personnel citizen id
+    public function searchByPersonnelCitizenId($citizenId)
+    {
+        $residuals = SubjectResidual::join('students', 'subject_residuals.student_id', '=', 'students.id')
+            ->join('personnels', 'subject_residuals.personnel_id', '=', 'personnels.id')
+            ->select(
+                'subject_residuals.id',
+                'students.student_code',
+                'students.name_th as student_name',
+                'students.tel_number as student_tel_number',
+                'students.email as student_email',
+                'subject_residuals.subject_type',
+                'subject_residuals.subject_code',
+                'subject_residuals.subject_name',
+                'subject_residuals.section',
+                'subject_residuals.detail',
+                'subject_residuals.status',
+                'personnels.name_title as personnel_name_title',
+                'personnels.name_th as personnel_name',
+                'personnels.tel_number as personnel_tel_number',
+                'personnels.email as personnel_email',
+                'subject_residuals.is_del',
+                'subject_residuals.created_at as date',
+            )
+            ->where('subject_residuals.is_del', false)
+            ->where('personnels.citizen_id', $citizenId)
+            ->orderBy('subject_residuals.id', 'desc')
+            ->paginate(10);
+
+        return response()->json($residuals, 200);
+    }
+
+    //? Search by student citizen id
+    public function searchByStudentCitizenId($citizenId)
+    {
+        $residuals = SubjectResidual::join('students', 'subject_residuals.student_id', '=', 'students.id')
+            ->join('personnels', 'subject_residuals.personnel_id', '=', 'personnels.id')
+            ->select(
+                'subject_residuals.id',
+                'students.student_code',
+                'students.name_th as student_name',
+                'students.tel_number as student_tel_number',
+                'students.email as student_email',
+                'subject_residuals.subject_type',
+                'subject_residuals.subject_code',
+                'subject_residuals.subject_name',
+                'subject_residuals.section',
+                'subject_residuals.detail',
+                'subject_residuals.status',
+                'personnels.name_title as personnel_name_title',
+                'personnels.name_th as personnel_name',
+                'personnels.tel_number as personnel_tel_number',
+                'personnels.email as personnel_email',
+                'subject_residuals.is_del',
+                'subject_residuals.created_at as date',
+            )
+            ->where('subject_residuals.is_del', false)
+            ->where('students.citizen_id', $citizenId)
+            ->orderBy('subject_residuals.id', 'desc')
+            ->paginate(10);
+
+        return response()->json($residuals, 200);
     }
 
     //? Create a subject residual

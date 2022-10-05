@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-//? Import Models
+//? Import Controllers
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CheckSigninController;
 use App\Http\Controllers\Api\StudentController;
@@ -108,6 +108,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/residual/update/status/{id}', [SubjectResidualController::class, 'updateStatus']);
     Route::get('/residual/show/update/{id}', [SubjectResidualController::class, 'residualForUpdate']);
     Route::get('/residual/show/{id}', [SubjectResidualController::class, 'residualForShow']);
+    Route::get('/residual/personnel/{citizenId}', [SubjectResidualController::class, 'searchByPersonnelCitizenId']);
+    Route::get('/residual/student/{citizenId}', [SubjectResidualController::class, 'searchByStudentCitizenId']);
+    Route::post('/residual/datesfilter', [SubjectResidualController::class, 'datesFilter']);
+    Route::post('/residual/search', [SubjectResidualController::class, 'searchByKeyword']);
 
     //? Room route
     Route::get('/rooms', [RoomController::class, 'index']); //? Paginate
