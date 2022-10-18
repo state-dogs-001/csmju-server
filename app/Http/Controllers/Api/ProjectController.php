@@ -140,7 +140,7 @@ class ProjectController extends Controller
             //? Upload file
             if ($request->hasFile('file')) {
                 $pdf = $request->file('file');
-                $pdfName = 'project-' . $fields['project_code'] . '.' . $pdf->getClientOriginalExtension();
+                $pdfName = 'project-' . time() . '.' . $pdf->getClientOriginalExtension();
                 $pdf->move(public_path('documents/projects'), $pdfName);
                 $fields['file'] = $pdfName;
             }
@@ -188,7 +188,7 @@ class ProjectController extends Controller
 
             //? Upload new file
             $pdf = $request->file('file');
-            $pdfName = 'project-' . $fields['project_code'] . '.' . $pdf->getClientOriginalExtension();
+            $pdfName = 'project-' . time() . '.' . $pdf->getClientOriginalExtension();
             $pdf->move(public_path('documents/projects'), $pdfName);
             $fields['file'] = $pdfName;
         }

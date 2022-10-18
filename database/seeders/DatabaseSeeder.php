@@ -27,6 +27,8 @@ class DatabaseSeeder extends Seeder
             EquipmentSeeder::class,
             UserSeeder::class,
             MaterialsSeeder::class,
+            UserTokenSeeder::class,
+            ProjectLibrarySeeder::class,
         ]);
     }
 }

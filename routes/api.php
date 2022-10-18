@@ -104,14 +104,17 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //? Residual route
     Route::get('/residuals', [SubjectResidualController::class, 'index']); //? Paginate
+    Route::get('/residuals/all', [SubjectResidualController::class, 'indexNotPaginate']); //? Not paginate
     Route::post('/residual/new', [SubjectResidualController::class, 'store']);
+    Route::post('/residual/update/{id}', [SubjectResidualController::class, 'update']);
     Route::post('/residual/update/status/{id}', [SubjectResidualController::class, 'updateStatus']);
     Route::get('/residual/show/update/{id}', [SubjectResidualController::class, 'residualForUpdate']);
     Route::get('/residual/show/{id}', [SubjectResidualController::class, 'residualForShow']);
-    Route::get('/residual/personnel/{citizenId}', [SubjectResidualController::class, 'searchByPersonnelCitizenId']);
     Route::get('/residual/student/{citizenId}', [SubjectResidualController::class, 'searchByStudentCitizenId']);
-    Route::post('/residual/datesfilter', [SubjectResidualController::class, 'datesFilter']);
+    Route::post('/residual/datesfilter', [SubjectResidualController::class, 'datesFilter']); //? Paginate
+    Route::post('/residual/datesfilter/all', [SubjectResidualController::class, 'datesFilterNotPaginate']); //? Not paginate
     Route::post('/residual/search', [SubjectResidualController::class, 'searchByKeyword']);
+    Route::post('/residual/delete/{id}', [SubjectResidualController::class, 'delete']);
 
     //? Room route
     Route::get('/rooms', [RoomController::class, 'index']); //? Paginate

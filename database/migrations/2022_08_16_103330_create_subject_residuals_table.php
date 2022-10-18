@@ -22,8 +22,7 @@ return new class extends Migration
             $table->text('detail')->comment('รายละเอียด');
             $table->unsignedBigInteger('student_id')->comment('ไอดีนักศึกษา');
             $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
-            $table->unsignedBigInteger('personnel_id')->comment('ไอดีบุคลากรผู้รับผิดชอบ');
-            $table->foreign('personnel_id')->references('id')->on('personnels')->onDelete('cascade');
+            $table->string('advisor')->comment('ชื่ออาจารย์ประจำวิชา');
             $table->string('status')->default('waiting')->comment('สถานะคำร้องขอ');
             $table->boolean('is_del')->default(false)->comment('สถานะการลบข้อมูล');
             $table->timestamps();

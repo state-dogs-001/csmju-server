@@ -176,7 +176,7 @@ class SubjectController extends Controller
     }
 
     //? Dalete a subject set is_del = true
-    public function delete(Request $request, $id)
+    public function delete($id)
     {
         $student = Subject::findOrFail($id);
         $student->update([

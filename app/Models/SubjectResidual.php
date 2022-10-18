@@ -16,14 +16,13 @@ class SubjectResidual extends Model
         'section',
         'detail',
         'student_id',
-        'personnel_id',
+        'advisor',
         'status',
         'is_del',
     ];
 
     protected $casts = [
         'student_id' => 'integer',
-        'personnel_id' => 'integer',
         'is_del' => 'boolean',
     ];
 
