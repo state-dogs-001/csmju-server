@@ -15,16 +15,15 @@ class Activity extends Model
         'date_start',
         'date_end',
         'detail',
-        'image',
+        'location',
+        'poster',
         'is_show',
-        'is_del',
     ];
 
     protected $casts = [
         'date_start' => 'date:Y-m-d',
         'date_end' => 'date:Y-m-d',
         'is_show' => 'boolean',
-        'is_del' => 'boolean',
     ];
 
     protected $hidden = [
@@ -46,10 +45,62 @@ class Activity extends Model
         }
     }
 
-    public function getImageAttribute($value)
+    //? One to many
+    public function activityImages()
+    {
+        return $this->hasMany('App\Models\ActivityImage', 'activity_id');
+    }
+
+    //? One to One
+    public function activityDoc()
+    {
+        return $this->hasOne('App\Models\ActivityDoc', 'activity_id');
+    }
+
+    public function getPosterAttribute($value)
     {
         if ($value) {
-            return asset('images/activities/' . $value);
+            return asset('images/activities/posters/' . $value);
+        }
+    }
+
+    public function getImagesAttribute($value)
+    {
+        if ($value) {
+            //? Split , to array
+            $imageSplit = explode(',', $value);
+
+            $images = [];
+            //? Loop array
+            foreach ($imageSplit as $image) {
+                $url = [
+                    'image' => asset('images/activities/images/' . $image),
+                ];
+
+                //? push url image to images array
+                array_push($images, $url);
+            }
+            return $images;
+        }
+    }
+
+    public function getDocsAttribute($value)
+    {
+        if ($value) {
+            //? Split , to array
+            $docSplit = explode(',', $value);
+
+            $docs = [];
+            //? Loop array
+            foreach ($docSplit as $doc) {
+                $url = [
+                    'doc' => asset('documents/activities/' . $doc),
+                ];
+
+                //? push url image to images array
+                array_push($docs, $url);
+            }
+            return $docs;
         }
     }
 }

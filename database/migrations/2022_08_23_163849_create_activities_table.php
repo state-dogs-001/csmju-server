@@ -20,9 +20,9 @@ return new class extends Migration
             $table->date('date_start')->comment('วันแรกที่จัดกิจกรรม');
             $table->date('date_end')->nullable()->comment('วันสุดท้ายที่จัดกิจกรรม');
             $table->text('detail')->comment('รายละเอียดกิจกรรม');
-            $table->string('image')->nullable()->comment('รูปกิจกรรม');
+            $table->string('location')->comment('สถานที่จัดกิจกรรม/รูปแบบการจัดกิจกรรม');
+            $table->string('poster')->comment('โปสเตอร์กิจกรรม');
             $table->boolean('is_show')->default(true)->comment('สถานะการแสดงข้อมูล');
-            $table->boolean('is_del')->default(false)->comment('สถานะการลบข้อมูล');
             $table->timestamps();
         });
     }

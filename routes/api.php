@@ -16,6 +16,8 @@ use App\Http\Controllers\Api\DocumentController;
 use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\CvController;
 use App\Http\Controllers\Api\ActivityController;
+use App\Http\Controllers\Api\ActivityImageController;
+use App\Http\Controllers\Api\ActivityDocController;
 use App\Http\Controllers\Api\AlumnusController;
 use App\Http\Controllers\Api\MaterialController;
 use App\Http\Controllers\Api\MaterialDisbursalController;
@@ -26,28 +28,16 @@ use App\Http\Controllers\Api\ComplainController;
 Route::post('/auth/signup', [AuthController::class, 'signup']);
 Route::post('/auth/signin', [AuthController::class, 'signin']);
 
-//? Activity route
-Route::get('/activities', [ActivityController::class, 'index']); //? Public (Paginate)
-Route::get('/activities/private', [ActivityController::class, 'indexPrivate']); //? Private (Paginate)
-Route::get('/activity/limit/{number}', [ActivityController::class, 'limit']); //? Limit
-Route::get('/activity/show/{id}', [ActivityController::class, 'showRead']); //? For Read
-Route::get('/activity/show/update/{id}', [ActivityController::class, 'showUpdate']); //? For update
-Route::get('/activity/search/{keyword}', [ActivityController::class, 'search']); //? Public (Paginate)
-Route::get('/activity/search/private/{keyword}', [ActivityController::class, 'searchPrivate']); //? Private (Paginate)
-Route::post('/activity/new', [ActivityController::class, 'store']);
-Route::post('/activity/update/{id}', [ActivityController::class, 'update']);
-Route::post('/activity/delete/{id}', [ActivityController::class, 'delete']);
-
-//? Metarial disbursal route
+//? Metarial disbursal route (เบิกวัสดุ)
 Route::get('/materials/disbursals', [MaterialDisbursalController::class, 'index']); //? Paginate
 Route::get('/material/disbursal/search/{keyword}', [MaterialDisbursalController::class, 'search']); //? Paginate
 Route::get('/material/disbursal/filter/{citizen_id}', [MaterialDisbursalController::class, 'filterByCitizenId']);
 Route::post('/material/disbursal/new', [MaterialDisbursalController::class, 'store']);
 Route::post('/material/disbursal/delete/{id}', [MaterialDisbursalController::class, 'delete']);
 
-//? Equipment borrow route
+//? Equipment borrow route (ยืมครุภัณฑ์)
 
-//? Maintenance route
+//? Maintenance route (แจ้งซ่อม)
 
 //? Middleware group
 Route::middleware('auth:sanctum')->group(function () {
@@ -175,6 +165,35 @@ Route::middleware('auth:sanctum')->group(function () {
     //? News route for mobile app
     Route::get('/news/all', [InformationController::class, 'indexAll']); //? Get all
     Route::get('/news/search/all/{keyword}', [InformationController::class, 'searchAll']);
+
+    //? Activity route
+    Route::get('/activities/all', [ActivityController::class, 'all']); //? Not Paginate
+    Route::get('/activities', [ActivityController::class, 'index']); //? Public (Paginate)
+    Route::get('/activities/private', [ActivityController::class, 'indexPrivate']); //? Private (Paginate)
+    Route::get('/activity/limit/{number}', [ActivityController::class, 'limit']); //? Limit
+    Route::get('/activity/show/{id}', [ActivityController::class, 'showRead']); //? For Read
+    Route::get('/activity/show/update/{id}', [ActivityController::class, 'showUpdate']); //? For update
+    Route::get('/activity/search/{keyword}', [ActivityController::class, 'search']); //? Public (Paginate)
+    Route::get('/activity/search/private/{keyword}', [ActivityController::class, 'searchPrivate']); //? Private (Paginate)
+    Route::post('/activity/new', [ActivityController::class, 'store']);
+    Route::post('/activity/update/{id}', [ActivityController::class, 'update']);
+    Route::delete('/activity/delete/{id}', [ActivityController::class, 'delete']);
+
+    //? Activity Images route
+    Route::get('/activity/images', [ActivityImageController::class, 'index']); //? Get all (paginate)
+    Route::get('/activity/images/activity-id/{id}', [ActivityImageController::class, 'show']);
+    Route::get('/activity/images/search/{keyword}', [ActivityImageController::class, 'search']); //? Search (paginate)
+    Route::post('/activity/images/new-or-update', [ActivityImageController::class, 'storeOrUpdate']);
+    // Route::post('/activity/images/update', [ActivityImageController::class, 'updateAll']);
+    Route::post('/activity/image/update/{id}', [ActivityImageController::class, 'update']); //? Update one
+    Route::delete('/activity/image/delete/{id}', [ActivityImageController::class, 'delete']); //? Delete one
+    Route::delete('/activity/images/delete/{id}', [ActivityImageController::class, 'deleteAll']); //? Delete all
+
+    //? Activity Documents route
+    Route::get('/activity/docs/activity-id/{id}', [ActivityDocController::class, 'show']);
+    Route::post('/activity/doc/new', [ActivityDocController::class, 'store']);
+    Route::post('/activity/doc/update/{id}', [ActivityDocController::class, 'update']);
+    Route::delete('/activity/doc/delete/{id}', [ActivityDocController::class, 'delete']);
 
     //? Official Document route
     Route::get('/documents', [DocumentController::class, 'index']); //? Public (Paginate)
