@@ -7,11 +7,28 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
+use App\Models\Activity;
 use App\Models\ActivityDoc;
-
 
 class ActivityDocController extends Controller
 {
+    //? Index
+    public function index()
+    {
+        $activities = ActivityDoc::join('activities', 'activity_docs.activity_id', '=', 'activities.id')
+            ->select(
+                'activity_docs.id',
+                'activity_docs.name',
+                'activity_docs.docs',
+                'activities.name as activity_name'
+            )
+            ->orderBy('activity_docs.id', 'desc')
+            ->paginate(20);
+
+        return response()->json($activities, 200);
+    }
+
+    //? Show
     public function show($id)
     {
         $doc = ActivityDoc::where('activity_id', $id)->get();
@@ -35,15 +52,16 @@ class ActivityDocController extends Controller
     {
         $fields = $request->validate([
             'activity_id' => 'required|integer',
-            'doc' => 'required|file|mimes:pdf|max:10240',
+            'name' => 'required|string',
+            'docs' => 'required|file|mimes:pdf|max:10240',
         ]);
 
         //? Has request file
-        if ($request->hasFile('doc')) {
-            $doc = $request->file('doc');
+        if ($request->hasFile('docs')) {
+            $doc = $request->file('docs');
             $filename = 'activity-doc-' . time() . '.' . $doc->getClientOriginalExtension();
             $doc->move(public_path('documents/activities'), $filename);
-            $fields['doc'] = $filename;
+            $fields['docs'] = $filename;
         }
 
         //? Create doc
@@ -60,7 +78,8 @@ class ActivityDocController extends Controller
     public function update(Request $request, $id)
     {
         $fields = $request->validate([
-            'doc' => 'required|file|mimes:pdf|max:10240',
+            'name' => 'required|string',
+            'docs' => 'required|file|mimes:pdf|max:10240',
         ]);
 
         //? Find doc by id for update
@@ -70,17 +89,17 @@ class ActivityDocController extends Controller
         $dbDoc = DB::table('activity_docs')->where('id', $id)->first();
 
         //? Has request file
-        if ($request->hasFile('doc')) {
+        if ($request->hasFile('docs')) {
             //? Delete old doc
             if (File::exists(public_path('documents/activities/' . $dbDoc->doc))) {
                 File::delete(public_path('documents/activities/' . $dbDoc->doc));
             }
 
             //? Upload new doc
-            $doc = $request->file('doc');
+            $doc = $request->file('docs');
             $filename = 'activity-doc-' . time() . '.' . $doc->getClientOriginalExtension();
             $doc->move(public_path('documents/activities'), $filename);
-            $fields['doc'] = $filename;
+            $fields['docs'] = $filename;
         }
 
         //? Update doc

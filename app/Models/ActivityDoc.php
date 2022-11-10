@@ -11,7 +11,8 @@ class ActivityDoc extends Model
 
     protected $fillable = [
         'activity_id',
-        'doc',
+        'name',
+        'docs',
     ];
 
     protected $hidden = [

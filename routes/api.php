@@ -190,6 +190,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/activity/images/delete/{id}', [ActivityImageController::class, 'deleteAll']); //? Delete all
 
     //? Activity Documents route
+    Route::get('/activity/docs', [ActivityDocController::class, 'index']); //? Get all (paginate)
     Route::get('/activity/docs/activity-id/{id}', [ActivityDocController::class, 'show']);
     Route::post('/activity/doc/new', [ActivityDocController::class, 'store']);
     Route::post('/activity/doc/update/{id}', [ActivityDocController::class, 'update']);
