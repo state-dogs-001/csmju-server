@@ -49,12 +49,12 @@ class CvController extends Controller
     {
         $fields = $request->validate([
             'citizen_id' => 'required|string|unique:cv_personnels,citizen_id|max:13',
-            'workplace' => 'required|string',
-            'bio' => 'required|string',
-            'skills' => 'required|array',
-            'experts' => 'required|array',
-            'experiences' => 'required|array',
-            'researches' => 'required|array',
+            'workplace' => 'nullable|string',
+            'bio' => 'nullable|string',
+            'skills' => 'nullable|array',
+            'experts' => 'nullable|array',
+            'experiences' => 'nullable|array',
+            'researches' => 'nullable|array',
         ]);
 
         //? Create
@@ -72,12 +72,12 @@ class CvController extends Controller
     {
         $fields = $request->validate([
             'citizen_id' => 'required|string|max:13',
-            'workplace' => 'required|string',
-            'bio' => 'required|string',
-            'skills' => 'required|array',
-            'experts' => 'required|array',
-            'experiences' => 'required|array',
-            'researches' => 'required|array',
+            'workplace' => 'nullable|string',
+            'bio' => 'nullable|string',
+            'skills' => 'nullable|array',
+            'experts' => 'nullable|array',
+            'experiences' => 'nullable|array',
+            'researches' => 'nullable|array',
         ]);
 
         $cv = CvPersonnel::findOrFail($id);

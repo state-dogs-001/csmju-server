@@ -8,245 +8,585 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 use App\Models\Information;
+use App\Models\InformationImage;
 
 class InformationController extends Controller
 {
-    //? Infornation public
-    public function index()
-    {
-        $news = Information::where('is_show', true)
-            ->where('is_del', false)
-            ->orderBy('id', 'desc')
-            ->paginate(12);
-
-        return response()->json($news, 200);
-    }
-
-    //? Imformation private
+    //? Private information (paginate)
     public function indexPrivate()
     {
-        $news = Information::where('is_del', false)
-            ->orderBy('id', 'desc')
+        //? Join table information and information_images
+        $information = Information::leftJoin('information_images', 'information.id', '=', 'information_images.information_id')
+            ->select(
+                'information.id',
+                'information.title',
+                'information.detail',
+                'information.poster',
+                'information.link',
+                'information.type',
+                'information.is_show',
+                DB::raw('GROUP_CONCAT(information_images.image) as images'),
+                'information.created_at',
+                'information.updated_at',
+            )
+            ->groupBy('information.id')
+            ->orderBy('information.id', 'desc')
             ->paginate(20);
 
-        return response()->json($news, 200);
+        return response()->json($information, 200);
     }
 
-    //? Information get all not paginate
-    public function indexAll()
+    //? Public information (paginate)
+    public function indexPublic()
     {
-        $news = Information::where('is_show', true)
-            ->where('is_del', false)
-            ->orderBy('id', 'desc')
+        //? Join table information and information_images
+        $information = Information::leftJoin('information_images', 'information.id', '=', 'information_images.information_id')
+            ->select(
+                'information.id',
+                'information.title',
+                'information.detail',
+                'information.poster',
+                'information.link',
+                'information.type',
+                'information.is_show',
+                DB::raw('GROUP_CONCAT(information_images.image) as images'),
+                'information.created_at',
+                'information.updated_at',
+            )
+            ->where('information.is_show', true)
+            ->groupBy('information.id')
+            ->orderBy('information.id', 'desc')
+            ->paginate(15);
+
+        return response()->json($information, 200);
+    }
+
+    //? Search Private
+    public function searchPrivate(Request $request)
+    {
+        $field = $request->validate([
+            'keyword' => 'required|string|max:255',
+        ]);
+
+        $keyword = $field['keyword'];
+
+        //? Join table information and information_images
+        $information = Information::leftJoin('information_images', 'information.id', '=', 'information_images.information_id')
+            ->select(
+                'information.id',
+                'information.title',
+                'information.detail',
+                'information.poster',
+                'information.link',
+                'information.type',
+                'information.is_show',
+                DB::raw('GROUP_CONCAT(information_images.image) as images'),
+                'information.created_at',
+                'information.updated_at',
+            )
+            ->where(function ($query) use ($keyword) {
+                $query->where('information.title', 'LIKE', "%$keyword%")
+                    ->orWhere('information.detail', 'LIKE', "%$keyword%")
+                    ->orWhere('information.type', 'LIKE', "%$keyword%");
+            })
+            ->groupBy('information.id')
+            ->orderBy('information.id', 'desc')
+            ->paginate(20);
+
+        return response()->json($information, 201);
+    }
+
+    //? Search Public
+    public function searchPublic(Request $request)
+    {
+        $field = $request->validate([
+            'keyword' => 'required|string|max:255',
+        ]);
+
+        $keyword = $field['keyword'];
+
+        //? Join table information and information_images
+        $information = Information::leftJoin('information_images', 'information.id', '=', 'information_images.information_id')
+            ->select(
+                'information.id',
+                'information.title',
+                'information.detail',
+                'information.poster',
+                'information.link',
+                'information.type',
+                'information.is_show',
+                DB::raw('GROUP_CONCAT(information_images.image) as images'),
+                'information.created_at',
+                'information.updated_at',
+            )
+            ->where(function ($query) use ($keyword) {
+                $query->where('information.title', 'LIKE', "%$keyword%")
+                    ->orWhere('information.detail', 'LIKE', "%$keyword%")
+                    ->orWhere('information.type', 'LIKE', "%$keyword%");
+            })
+            ->where('information.is_show', true)
+            ->groupBy('information.id')
+            ->orderBy('information.id', 'desc')
+            ->paginate(20);
+
+        return response()->json($information, 201);
+    }
+
+    //? Private information (all)
+    public function allPrivateInformation()
+    {
+        //? Join table information and information_images
+        $information = Information::leftJoin('information_images', 'information.id', '=', 'information_images.information_id')
+            ->select(
+                'information.id',
+                'information.title',
+                'information.detail',
+                'information.poster',
+                'information.link',
+                'information.type',
+                'information.is_show',
+                DB::raw('GROUP_CONCAT(information_images.image) as images'),
+                'information.created_at',
+                'information.updated_at',
+            )
+            ->groupBy('information.id')
+            ->orderBy('information.id', 'desc')
             ->get();
 
         return response()->json([
             'success' => true,
-            'news' => $news
+            'message' => 'Get data success',
+            'data' => $information,
         ], 200);
     }
 
-    //? Show public
-    public function show($id)
+    //? Public information (all)
+    public function allPublicInformation()
     {
-        $news = Information::where('id', $id)
-            ->where('is_show', true)
-            ->where('is_del', false)
-            ->first();
-
-        //? Check if news is exist
-        if (!$news) {
-            return response()->json([
-                'success' => false,
-                'message' => 'ไม่พบข้อมูล',
-            ], 200);
-        } else {
-            return response()->json([
-                'success' => true,
-                'data' => $news,
-            ], 200);
-        }
-    }
-
-    //? Show private
-    public function showPrivate($id)
-    {
-        $news = Information::where('id', $id)
-            ->where('is_del', false)
-            ->first();
-
-        //? Check if news is exist
-        if (!$news) {
-            return response()->json([
-                'success' => false,
-                'message' => 'ไม่พบข้อมูล',
-            ], 200);
-        } else {
-            return response()->json([
-                'success' => true,
-                'data' => $news,
-            ], 200);
-        }
-    }
-
-    //? Store new information
-    public function store(Request $request)
-    {
-        $fields = $request->validate([
-            'title' => 'required|string',
-            'detail' => 'required|string',
-            'image' => 'required|image|mimes:jpeg,png,jpg|max:3584',
-            'link' => 'nullable|string',
-            'type' => 'required|string',
-            'is_show' => 'boolean',
-        ]);
-
-        //? Upload image
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = 'news-' . time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images/news'), $imageName);
-            $fields['image'] = $imageName;
-        }
-
-        //? Create new information
-        $news = Information::create($fields);
+        //? Join table information and information_images
+        $information = Information::leftJoin('information_images', 'information.id', '=', 'information_images.information_id')
+            ->select(
+                'information.id',
+                'information.title',
+                'information.detail',
+                'information.poster',
+                'information.link',
+                'information.type',
+                'information.is_show',
+                DB::raw('GROUP_CONCAT(information_images.image) as images'),
+                'information.created_at',
+                'information.updated_at',
+            )
+            ->where('information.is_show', true)
+            ->groupBy('information.id')
+            ->orderBy('information.id', 'desc')
+            ->get();
 
         return response()->json([
             'success' => true,
-            'message' => 'อัพโหลดข้อมูลสำเร็จ',
-            'data' => $news,
+            'data' => $information,
+        ], 200);
+    }
+
+    //? Search All Information Private
+    public function searchAllPrivate(Request $request)
+    {
+        $field = $request->validate([
+            'keyword' => 'required|string|max:255',
+        ]);
+
+        $keyword = $field['keyword'];
+
+        //? Join table information and information_images
+        $information = Information::leftJoin('information_images', 'information.id', '=', 'information_images.information_id')
+            ->select(
+                'information.id',
+                'information.title',
+                'information.detail',
+                'information.poster',
+                'information.link',
+                'information.type',
+                'information.is_show',
+                DB::raw('GROUP_CONCAT(information_images.image) as images'),
+                'information.created_at',
+                'information.updated_at',
+            )
+            ->where(function ($query) use ($keyword) {
+                $query->where('information.title', 'LIKE', "%$keyword%")
+                    ->orWhere('information.detail', 'LIKE', "%$keyword%")
+                    ->orWhere('information.type', 'LIKE', "%$keyword%");
+            })
+            ->groupBy('information.id')
+            ->orderBy('information.id', 'desc')
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $information,
         ], 201);
     }
 
-    //? Update information
-    public function update(Request $request, $id)
+    //? Search All Information Public
+    public function searchAllPublic(Request $request)
     {
-        $fields = $request->validate([
-            'title' => 'required|string',
-            'detail' => 'required|string',
-            'image' => 'image|mimes:jpeg,png,jpg|max:3584',
-            'link' => 'nullable|string',
-            'type' => 'required|string',
-            'is_show' => 'boolean',
+        $field = $request->validate([
+            'keyword' => 'required|string|max:255',
         ]);
 
-        //? Find information by id for update
-        $news = Information::findOrFail($id);
+        $keyword = $field['keyword'];
 
-        //? Find information by id for check if image is changed
-        $dbNews = DB::table('information')->where('id', $id)->first();
-
-        //? Upload image
-        if ($request->hasFile('image')) {
-            //? Check old image if exist delete old image
-            if (File::exists(public_path('images/news/' . $dbNews->image))) {
-                File::delete(public_path('images/news/' . $dbNews->image));
-            }
-
-            //? Upload new image
-            $image = $request->file('image');
-            $imageName = 'news-' . time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images/news'), $imageName);
-            $fields['image'] = $imageName;
-        }
-
-        //? Update information
-        $news->update($fields);
+        //? Join table information and information_images
+        $information = Information::leftJoin('information_images', 'information.id', '=', 'information_images.information_id')
+            ->select(
+                'information.id',
+                'information.title',
+                'information.detail',
+                'information.poster',
+                'information.link',
+                'information.type',
+                'information.is_show',
+                DB::raw('GROUP_CONCAT(information_images.image) as images'),
+                'information.created_at',
+                'information.updated_at',
+            )
+            ->where(function ($query) use ($keyword) {
+                $query->where('information.title', 'LIKE', "%$keyword%")
+                    ->orWhere('information.detail', 'LIKE', "%$keyword%")
+                    ->orWhere('information.type', 'LIKE', "%$keyword%");
+            })
+            ->where('information.is_show', true)
+            ->groupBy('information.id')
+            ->orderBy('information.id', 'desc')
+            ->get();
 
         return response()->json([
             'success' => true,
-            'message' => 'แก้ไขข้อมูลสำเร็จ',
-            'data' => $news,
-        ], 200);
+            'data' => $information,
+        ], 201);
     }
 
-    //? Search information public
-    public function search($keyword)
+    //? Limit information data (public)
+    public function limitData($number)
     {
-        $news = Information::where('is_show', true)
-            ->where('is_del', false)
-            ->where(function ($query) use ($keyword) {
-                $query->where('title', 'LIKE', "%$keyword%")
-                    ->orWhere('detail', 'LIKE', "%$keyword%")
-                    ->orWhere('type', 'LIKE', "%$keyword%");
-            })
-            ->orderBy('id', 'desc')
-            ->paginate(20);
-
-        return response()->json($news, 200);
-    }
-
-    //? Search information private
-    public function searchPrivate($keyword)
-    {
-        $news = Information::where('is_del', false)
-            ->where(function ($query) use ($keyword) {
-                $query->where('title', 'LIKE', "%$keyword%")
-                    ->orWhere('detail', 'LIKE', "%$keyword%")
-                    ->orWhere('type', 'LIKE', "%$keyword%");
-            })
-            ->orderBy('id', 'desc')
-            ->paginate(20);
-
-        return response()->json($news, 200);
-    }
-
-    //? Search information all
-    public function searchAll($keyword)
-    {
-        $news = Information::where('is_show', true)
-            ->where('is_del', false)
-            ->where(function ($query) use ($keyword) {
-                $query->where('title', 'LIKE', "%$keyword%")
-                    ->orWhere('detail', 'LIKE', "%$keyword%")
-                    ->orWhere('type', 'LIKE', "%$keyword%");
-            })
-            ->orderBy('id', 'desc')
-            ->get();
-
-        //? Check if news is empty
-        if ($news->isEmpty()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'ไม่พบข้อมูล',
-            ], 200);
-        } else {
-            return response()->json([
-                'success' => true,
-                'data' => $news,
-            ], 200);
-        }
-    }
-
-    //? Limit information
-    public function newsLimit($number)
-    {
-        $news = Information::where('is_show', true)
-            ->where('is_del', false)
-            ->orderBy('id', 'desc')
+        //? Join table information and information_images
+        $information = Information::leftJoin('information_images', 'information.id', '=', 'information_images.information_id')
+            ->select(
+                'information.id',
+                'information.title',
+                'information.detail',
+                'information.poster',
+                'information.link',
+                'information.type',
+                'information.is_show',
+                DB::raw('GROUP_CONCAT(information_images.image) as images'),
+                'information.created_at',
+                'information.updated_at',
+            )
+            ->where('information.is_show', true)
+            ->groupBy('information.id')
+            ->orderBy('information.id', 'desc')
             ->limit($number)
             ->get();
 
         return response()->json([
             'success' => true,
-            'data' => $news,
+            'data' => $information,
         ], 200);
     }
 
-    //? Delete information
+    //? Show Private
+    public function showPrivate($id)
+    {
+        //? Join table information and information_images
+        $information = Information::leftJoin('information_images', 'information.id', '=', 'information_images.information_id')
+            ->select(
+                'information.id',
+                'information.title',
+                'information.detail',
+                'information.poster',
+                'information.link',
+                'information.type',
+                'information.is_show',
+                DB::raw('GROUP_CONCAT(information_images.image) as images'),
+                'information.created_at',
+                'information.updated_at',
+            )
+            ->where('information.id', $id)
+            ->groupBy('information.id')
+            ->orderBy('information.id', 'desc')
+            ->first();
+
+        if ($information !== null) {
+            return response()->json([
+                'success' => true,
+                'data' => $information,
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data not found',
+            ], 200);
+        }
+    }
+
+    //? Show Public
+    public function showPublic($id)
+    {
+        //? Join table information and information_images
+        $information = Information::leftJoin('information_images', 'information.id', '=', 'information_images.information_id')
+            ->select(
+                'information.id',
+                'information.title',
+                'information.detail',
+                'information.poster',
+                'information.link',
+                'information.type',
+                'information.is_show',
+                DB::raw('GROUP_CONCAT(information_images.image) as images'),
+                'information.created_at',
+                'information.updated_at',
+            )
+            ->where('information.id', $id)
+            ->where('information.is_show', true)
+            ->groupBy('information.id')
+            ->orderBy('information.id', 'desc')
+            ->first();
+
+        if ($information !== null) {
+            return response()->json([
+                'success' => true,
+                'data' => $information,
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data not found',
+            ], 200);
+        }
+    }
+
+    //? Store
+    public function store(Request $request)
+    {
+        $fields = $request->validate([
+            'title' => 'required|string|max:255',
+            'detail' => 'required|string',
+            'poster' => 'required',
+            'link' => 'nullable|string|max:255',
+            'type' => 'required|string|max:255',
+            'images' => 'nullable',
+            'is_show' => 'boolean',
+        ]);
+
+        //? Has request poster
+        if ($request->hasFile('poster')) {
+            $poster = $request->file('poster');
+
+            //? Create name
+            $posterName = 'poster-news-' . time() . '-' . mt_rand() . '.' . $poster->getClientOriginalExtension();
+
+            //? Get year and month
+            $year = date('Y');
+            $month = date('m');
+
+            //? Create path
+            $path = 'images/news/posters/' . $year . '/' . $month;
+
+            //? Move file
+            $poster->move(public_path($path), $posterName);
+
+            //? Set poster name to field
+            $fields['poster'] =  $year . '/' . $month . '/' . $posterName;
+        }
+
+        //? Create information
+        $information = Information::create($fields);
+
+        //? Has request images
+        if ($request->hasFile('images')) {
+            $images = $request->file('images');
+            foreach ($images as $image) {
+                //? Create image name
+                $imageName = 'image-news-' . time() . '-' . mt_rand() . '.' . $image->getClientOriginalExtension();
+
+                //? Get year and month
+                $year = date('Y');
+                $month = date('m');
+
+                //? Create path
+                $path = 'images/news/images/' . $year . '/' . $month;
+
+                //? Move file
+                $image->move(public_path($path), $imageName);
+
+                //? Create information image
+                $informationImage = new InformationImage();
+                $informationImage->information_id = $information->id;
+                $informationImage->image = $year . '/' . $month . '/' . $imageName;
+                $informationImage->save();
+            }
+        }
+
+        //? Join table information and information_images
+        $response = Information::leftJoin('information_images', 'information.id', '=', 'information_images.information_id')
+            ->select(
+                'information.id',
+                'information.title',
+                'information.detail',
+                'information.poster',
+                'information.link',
+                'information.type',
+                'information.is_show',
+                DB::raw('GROUP_CONCAT(information_images.image) as images'),
+                'information.created_at',
+                'information.updated_at',
+            )
+            ->where('information.id', $information->id)
+            ->groupBy('information.id')
+            ->first();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'บันทึกกิจกรรมสำเร็จ',
+            'data' => $response,
+        ], 201);
+    }
+
+    //? Update
+    public function update(Request $request, $id)
+    {
+        $fields = $request->validate([
+            'title' => 'required|string|max:255',
+            'detail' => 'required|string',
+            'poster' => 'nullable',
+            'link' => 'nullable|string|max:255',
+            'type' => 'required|string|max:255',
+            'images' => 'nullable',
+            'is_show' => 'boolean',
+        ]);
+
+        //? Find information for update
+        $information = Information::findOrFail($id);
+
+        //? Find information for check if poster is changed
+        $dbInformation = DB::table('information')->where('id', $id)->first();
+
+        //? Has request poster
+        if ($request->hasFile('poster')) {
+            //? Check old poster if exist delete old poster
+            if (File::exists(public_path('images/news/posters/' . $dbInformation->poster))) {
+                File::delete(public_path('images/news/posters/' . $dbInformation->poster));
+            }
+
+            $poster = $request->file('poster');
+
+            //? Create name
+            $posterName = 'poster-news-' . time() . '-' . mt_rand() . '.' . $poster->getClientOriginalExtension();
+
+            //? Get year and month
+            $year = date('Y');
+            $month = date('m');
+
+            //? Create path
+            $path = 'images/news/posters/' . $year . '/' . $month;
+
+            //? Move file
+            $poster->move(public_path($path), $posterName);
+
+            //? Set poster name to field
+            $fields['poster'] =  $year . '/' . $month . '/' . $posterName;
+        }
+
+        //? Update information
+        $information->update($fields);
+
+        //? Has request images
+        if ($request->hasFile('images')) {
+            $dbInformationImages = DB::table('information_images')->where('information_id', $id)->get();
+            foreach ($dbInformationImages as $dbInformationImage) {
+                //? Check old image if exist delete old image
+                if (File::exists(public_path('images/news/images/' . $dbInformationImage->image))) {
+                    File::delete(public_path('images/news/images/' . $dbInformationImage->image));
+                }
+            }
+
+            //? Delete information images
+            InformationImage::where('information_id', $id)->delete();
+
+            $images = $request->file('images');
+            foreach ($images as $image) {
+                //? Create image name
+                $imageName = 'image-news-' . time() . '-' . mt_rand() . '.' . $image->getClientOriginalExtension();
+
+                //? Get year and month
+                $year = date('Y');
+                $month = date('m');
+
+                //? Create path
+                $path = 'images/news/images/' . $year . '/' . $month;
+
+                //? Move file
+                $image->move(public_path($path), $imageName);
+
+                //? Create information image
+                $informationImage = new InformationImage();
+                $informationImage->information_id = $id;
+                $informationImage->image = $year . '/' . $month . '/' . $imageName;
+                $informationImage->save();
+            }
+        }
+
+        //? Join table information and information_images
+        $response = Information::leftJoin('information_images', 'information.id', '=', 'information_images.information_id')
+            ->select(
+                'information.id',
+                'information.title',
+                'information.detail',
+                'information.poster',
+                'information.link',
+                'information.type',
+                'information.is_show',
+                DB::raw('GROUP_CONCAT(information_images.image) as images'),
+                'information.created_at',
+                'information.updated_at',
+            )
+            ->where('information.id', $id)
+            ->groupBy('information.id')
+            ->first();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'บันทึกกิจกรรมสำเร็จ',
+            'data' => $response,
+        ], 201);
+    }
+
+    //? Delete
     public function delete($id)
     {
-        //? Find information by id for delete
-        $news = Information::findOrFail($id);
-        $news->update([
-            'is_del' => true,
-        ]);
+        //? Find information for delete
+        $information = Information::findOrFail($id);
+
+        //? Delete information poster file 
+        $dbInformation = DB::table('information')->where('id', $id)->first();
+        if (File::exists(public_path('images/news/posters/' . $dbInformation->poster))) {
+            File::delete(public_path('images/news/posters/' . $dbInformation->poster));
+        }
+
+        //? Delete information images file
+        $dbInformationImages = DB::table('information_images')->where('information_id', $id)->get();
+        foreach ($dbInformationImages as $dbInformationImage) {
+            if (File::exists(public_path('images/news/images/' . $dbInformationImage->image))) {
+                File::delete(public_path('images/news/images/' . $dbInformationImage->image));
+            }
+        }
+
+        //? Delete information
+        $information->delete();
 
         return response()->json([
             'success' => true,
             'message' => 'ลบข้อมูลสำเร็จ',
-            'data' => $news,
-        ], 200);
+        ], 201);
     }
 }

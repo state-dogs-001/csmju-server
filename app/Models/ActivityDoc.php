@@ -12,7 +12,7 @@ class ActivityDoc extends Model
     protected $fillable = [
         'activity_id',
         'name',
-        'docs',
+        'file',
     ];
 
     protected $hidden = [
@@ -30,7 +30,7 @@ class ActivityDoc extends Model
         return $this->belongsTo('App\Models\Activity', 'activity_id');
     }
 
-    public function getDocAttribute($value)
+    public function getFileAttribute($value)
     {
         if ($value) {
             return asset('documents/activities/' . $value);

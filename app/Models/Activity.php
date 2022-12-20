@@ -31,27 +31,11 @@ class Activity extends Model
         'updated_at',
     ];
 
-    public function getDateStartAttribute($value)
-    {
-        if ($value) {
-            return \Carbon\Carbon::parse($value)->format('d/m/Y');
-        }
-    }
-
-    public function getDateEndAttribute($value)
-    {
-        if ($value) {
-            return \Carbon\Carbon::parse($value)->format('d/m/Y');
-        }
-    }
-
-    //? One to many
     public function activityImages()
     {
         return $this->hasMany('App\Models\ActivityImage', 'activity_id');
     }
 
-    //? One to One
     public function activityDoc()
     {
         return $this->hasOne('App\Models\ActivityDoc', 'activity_id');

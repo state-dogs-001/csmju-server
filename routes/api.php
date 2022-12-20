@@ -16,7 +16,7 @@ use App\Http\Controllers\Api\DocumentController;
 use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\CvController;
 use App\Http\Controllers\Api\ActivityController;
-use App\Http\Controllers\Api\ActivityImageController;
+// use App\Http\Controllers\Api\ActivityImageController;
 use App\Http\Controllers\Api\ActivityDocController;
 use App\Http\Controllers\Api\AlumnusController;
 use App\Http\Controllers\Api\MaterialController;
@@ -148,23 +148,21 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/banner/delete/{id}', [BannerController::class, 'delete']);
     Route::get('/banner/count', [BannerController::class, 'count']);
 
-    //? News route for web and mobile app
-    Route::get('/news/show/{id}', [InformationController::class, 'show']); //? For public
-    Route::get('/news/limit/{number}', [InformationController::class, 'newsLimit']); //? Limit
-
-    //? News route for web
-    Route::get('/news', [InformationController::class, 'index']); //? Paginate (For public)
-    Route::get('/news/private', [InformationController::class, 'indexPrivate']); //? Paginate (For private)
-    Route::get('/news/show/private/{id}', [InformationController::class, 'showPrivate']); //? For private for dashboard
-    Route::get('/news/search/{keyword}', [InformationController::class, 'search']); //? Paginate (For public)
-    Route::get('/news/search/private/{keyword}', [InformationController::class, 'searchPrivate']); //? Paginate (For private for dashboard)
+    //? News route
     Route::post('/news/new', [InformationController::class, 'store']);
     Route::post('/news/update/{id}', [InformationController::class, 'update']);
-    Route::post('/news/delete/{id}', [InformationController::class, 'delete']);
-
-    //? News route for mobile app
-    Route::get('/news/all', [InformationController::class, 'indexAll']); //? Get all
-    Route::get('/news/search/all/{keyword}', [InformationController::class, 'searchAll']);
+    Route::get('/news', [InformationController::class, 'indexPublic']); //? Public information (paginate)
+    Route::get('/news/private', [InformationController::class, 'indexPrivate']); //? Private information (paginate)
+    Route::post('/news/search/private', [InformationController::class, 'searchPrivate']); //? Private information (paginate)
+    Route::post('/news/search', [InformationController::class, 'searchPublic']); //? Public information (paginate)
+    Route::get('/news/all', [InformationController::class, 'allPublicInformation']); //? Public information (not paginate)
+    Route::get('/news/all/private', [InformationController::class, 'allPrivateInformation']); //? Private information (not paginate)
+    Route::post('/news/search/all/private', [InformationController::class, 'searchAllPrivate']); //? Private information (not paginate)
+    Route::post('/news/search/all', [InformationController::class, 'searchAllPublic']); //? Public information (not paginate)
+    Route::get('/news/limit/{number}', [InformationController::class, 'limitData']); //? Limit data (public)
+    Route::get('/news/show/private/{id}', [InformationController::class, 'showPrivate']); //? Private information
+    Route::get('/news/show/{id}', [InformationController::class, 'showPublic']); //? Public information
+    Route::delete('/news/delete/{id}', [InformationController::class, 'delete']);
 
     //? Activity route
     Route::get('/activities/all', [ActivityController::class, 'all']); //? Not Paginate
@@ -173,25 +171,28 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/activity/limit/{number}', [ActivityController::class, 'limit']); //? Limit
     Route::get('/activity/show/{id}', [ActivityController::class, 'showRead']); //? For Read
     Route::get('/activity/show/update/{id}', [ActivityController::class, 'showUpdate']); //? For update
-    Route::get('/activity/search/{keyword}', [ActivityController::class, 'search']); //? Public (Paginate)
-    Route::get('/activity/search/private/{keyword}', [ActivityController::class, 'searchPrivate']); //? Private (Paginate)
+    Route::post('/activity/search', [ActivityController::class, 'search']); //? Public (Paginate)
+    Route::post('/activity/search/private', [ActivityController::class, 'searchPrivate']); //? Private (Paginate)
     Route::post('/activity/new', [ActivityController::class, 'store']);
     Route::post('/activity/update/{id}', [ActivityController::class, 'update']);
     Route::delete('/activity/delete/{id}', [ActivityController::class, 'delete']);
 
-    //? Activity Images route
+    //? Activity Images route (Not use)
+    /*
     Route::get('/activity/images', [ActivityImageController::class, 'index']); //? Get all (paginate)
     Route::get('/activity/images/activity-id/{id}', [ActivityImageController::class, 'show']);
     Route::get('/activity/images/search/{keyword}', [ActivityImageController::class, 'search']); //? Search (paginate)
     Route::post('/activity/images/new-or-update', [ActivityImageController::class, 'storeOrUpdate']);
-    // Route::post('/activity/images/update', [ActivityImageController::class, 'updateAll']);
+    Route::post('/activity/images/update', [ActivityImageController::class, 'updateAll']);
     Route::post('/activity/image/update/{id}', [ActivityImageController::class, 'update']); //? Update one
     Route::delete('/activity/image/delete/{id}', [ActivityImageController::class, 'delete']); //? Delete one
     Route::delete('/activity/images/delete/{id}', [ActivityImageController::class, 'deleteAll']); //? Delete all
+    */
 
     //? Activity Documents route
     Route::get('/activity/docs', [ActivityDocController::class, 'index']); //? Get all (paginate)
-    Route::get('/activity/docs/activity-id/{id}', [ActivityDocController::class, 'show']);
+    Route::get('/activity/doc/{id}', [ActivityDocController::class, 'show']);
+    Route::post('/activity/docs/search', [ActivityDocController::class, 'search']); //? Search (paginate)
     Route::post('/activity/doc/new', [ActivityDocController::class, 'store']);
     Route::post('/activity/doc/update/{id}', [ActivityDocController::class, 'update']);
     Route::delete('/activity/doc/delete/{id}', [ActivityDocController::class, 'delete']);

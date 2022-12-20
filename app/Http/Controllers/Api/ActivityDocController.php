@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
-use App\Models\Activity;
+// use App\Models\Activity;
 use App\Models\ActivityDoc;
 
 class ActivityDocController extends Controller
@@ -19,8 +19,9 @@ class ActivityDocController extends Controller
             ->select(
                 'activity_docs.id',
                 'activity_docs.name',
-                'activity_docs.docs',
-                'activities.name as activity_name'
+                'activity_docs.file',
+                'activity_docs.activity_id',
+                'activities.name as activity_name',
             )
             ->orderBy('activity_docs.id', 'desc')
             ->paginate(20);
@@ -28,21 +29,57 @@ class ActivityDocController extends Controller
         return response()->json($activities, 200);
     }
 
+    //? Search
+    public function search(Request $request)
+    {
+        $field = $request->validate([
+            'keyword' => 'required|string',
+        ]);
+
+        $keyword = $field['keyword'];
+
+        $docs = ActivityDoc::join('activities', 'activity_docs.activity_id', '=', 'activities.id')
+            ->select(
+                'activity_docs.id',
+                'activity_docs.name',
+                'activity_docs.file',
+                'activity_docs.activity_id',
+                'activities.name as activity_name'
+            )
+            ->where(function ($query) use ($keyword) {
+                $query->where('activity_docs.name', 'LIKE', "%$keyword%")
+                    ->orWhere('activities.name', 'LIKE', "%$keyword%");
+            })
+            ->orderBy('activity_docs.id', 'desc')
+            ->paginate(20);
+
+        return response()->json($docs, 201);
+    }
+
     //? Show
     public function show($id)
     {
-        $doc = ActivityDoc::where('activity_id', $id)->get();
+        $doc = ActivityDoc::join('activities', 'activity_docs.activity_id', '=', 'activities.id')
+            ->select(
+                'activity_docs.id',
+                'activity_docs.name',
+                'activity_docs.file',
+                'activity_docs.activity_id',
+                'activities.name as activity_name'
+            )
+            ->where('activity_docs.id', $id)
+            ->orderBy('activity_docs.id', 'desc')
+            ->first();
 
-        if (!$doc) {
+        if ($doc) {
             return response()->json([
-                'success' => false,
-                'message' => 'ไม่พบเอกสาร',
+                'success' => true,
+                'data' => $doc,
             ], 200);
         } else {
             return response()->json([
-                'success' => true,
-                'message' => 'เอกสาร',
-                'data' => $doc
+                'success' => false,
+                'message' => 'ไม่พบข้อมูล',
             ], 200);
         }
     }
@@ -53,15 +90,28 @@ class ActivityDocController extends Controller
         $fields = $request->validate([
             'activity_id' => 'required|integer',
             'name' => 'required|string',
-            'docs' => 'required|file|mimes:pdf|max:10240',
+            'file' => 'required|file|mimes:pdf|max:10240',
         ]);
 
-        //? Has request file
-        if ($request->hasFile('docs')) {
-            $doc = $request->file('docs');
+        //? Has request uplaod file
+        if ($request->hasFile('file')) {
+            $doc = $request->file('file');
+
+            //? Generate file name
             $filename = 'activity-doc-' . time() . '.' . $doc->getClientOriginalExtension();
-            $doc->move(public_path('documents/activities'), $filename);
-            $fields['docs'] = $filename;
+
+            //? Get year and month
+            $year = date('Y');
+            $month = date('m');
+
+            //? Set path
+            $path = 'documents/activities/' . $year . '/' . $month;
+
+            //? Move file to public storage
+            $doc->move(public_path($path), $filename);
+
+            //? Set file name to fields
+            $fields['file'] = $year . '/' . $month . '/' . $filename;
         }
 
         //? Create doc
@@ -78,8 +128,9 @@ class ActivityDocController extends Controller
     public function update(Request $request, $id)
     {
         $fields = $request->validate([
+            'activity_id' => 'required|integer',
             'name' => 'required|string',
-            'docs' => 'required|file|mimes:pdf|max:10240',
+            'file' => 'nullable|file|mimes:pdf|max:10240',
         ]);
 
         //? Find doc by id for update
@@ -89,17 +140,30 @@ class ActivityDocController extends Controller
         $dbDoc = DB::table('activity_docs')->where('id', $id)->first();
 
         //? Has request file
-        if ($request->hasFile('docs')) {
+        if ($request->hasFile('file')) {
             //? Delete old doc
-            if (File::exists(public_path('documents/activities/' . $dbDoc->doc))) {
-                File::delete(public_path('documents/activities/' . $dbDoc->doc));
+            if (File::exists(public_path('documents/activities/' . $dbDoc->file))) {
+                File::delete(public_path('documents/activities/' . $dbDoc->file));
             }
 
             //? Upload new doc
-            $doc = $request->file('docs');
+            $doc = $request->file('file');
+
+            //? Generate file name
             $filename = 'activity-doc-' . time() . '.' . $doc->getClientOriginalExtension();
-            $doc->move(public_path('documents/activities'), $filename);
-            $fields['docs'] = $filename;
+
+            //? Get year and month
+            $year = date('Y');
+            $month = date('m');
+
+            //? Set path
+            $path = 'documents/activities/' . $year . '/' . $month;
+
+            //? Move file to public storage
+            $doc->move(public_path($path), $filename);
+
+            //? Set file name to fields
+            $fields['file'] = $year . '/' . $month . '/' . $filename;
         }
 
         //? Update doc
@@ -122,8 +186,8 @@ class ActivityDocController extends Controller
         $dbDoc = DB::table('activity_docs')->where('id', $id)->first();
 
         //? Delete old doc
-        if (File::exists(public_path('documents/activities/' . $dbDoc->doc))) {
-            File::delete(public_path('documents/activities/' . $dbDoc->doc));
+        if (File::exists(public_path('documents/activities/' . $dbDoc->file))) {
+            File::delete(public_path('documents/activities/' . $dbDoc->file));
         }
 
         //? Delete doc

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('activity_id')->comment('ไอดีกิจกรรม');
             $table->foreign('activity_id')->references('id')->on('activities')->onDelete('cascade');
             $table->string('name')->comment('ชื่อเอกสาร');
-            $table->string('docs')->comment('เอกสารรายชื่อผู้เข้าร่วมกิจกรรม');
+            $table->string('file')->comment('เอกสารรายชื่อผู้เข้าร่วมกิจกรรม');
             $table->timestamps();
         });
     }

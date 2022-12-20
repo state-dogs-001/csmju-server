@@ -23,16 +23,17 @@ class ActivityImage extends Model
         'activity_id' => 'integer',
     ];
 
-    //? One to many
     public function activity()
     {
         return $this->belongsTo('App\Models\Activity', 'activity_id');
     }
 
+    /*
     public function getImagesAttribute($value)
     {
         if ($value) {
             return asset('images/activities/images/' . $value);
         }
     }
+    */
 }
