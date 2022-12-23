@@ -127,7 +127,7 @@ class InformationController extends Controller
             ->where('information.is_show', true)
             ->groupBy('information.id')
             ->orderBy('information.id', 'desc')
-            ->paginate(20);
+            ->paginate(15);
 
         return response()->json($information, 201);
     }
