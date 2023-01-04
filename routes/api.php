@@ -22,11 +22,13 @@ use App\Http\Controllers\Api\AlumnusController;
 use App\Http\Controllers\Api\MaterialController;
 use App\Http\Controllers\Api\MaterialDisbursalController;
 use App\Http\Controllers\Api\EquipmentController;
+use App\Http\Controllers\Api\EquipmentRepairController;
 use App\Http\Controllers\Api\ComplainController;
 
 //? Auth route
 Route::post('/auth/signup', [AuthController::class, 'signup']);
 Route::post('/auth/signin', [AuthController::class, 'signin']);
+Route::get('/auth/admin-check/{citizen_id}', [AuthController::class, 'adminCheck']);
 
 //? Metarial disbursal route (เบิกวัสดุ)
 Route::get('/materials/disbursals', [MaterialDisbursalController::class, 'index']); //? Paginate
@@ -37,7 +39,12 @@ Route::post('/material/disbursal/delete/{id}', [MaterialDisbursalController::cla
 
 //? Equipment borrow route (ยืมครุภัณฑ์)
 
-//? Maintenance route (แจ้งซ่อม)
+//? Equipment repair route (แจ้งซ่อม)
+Route::post('/equipment/repair/new', [EquipmentRepairController::class, 'store']);
+Route::get('/equipment/repairs', [EquipmentRepairController::class, 'index']); //? Paginate
+Route::post('/equipment/repair/search', [EquipmentRepairController::class, 'search']); //? Paginate
+
+//? Repairman line token route
 
 //? Middleware group
 Route::middleware('auth:sanctum')->group(function () {
@@ -122,6 +129,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //? Equipment route
     Route::get('/equipments', [EquipmentController::class, 'index']); //? Paginate
+    Route::get('/equipments/all', [EquipmentController::class, 'indexAll']); //? Not paginate
     Route::get('/equipment/show/{id}', [EquipmentController::class, 'show']); //? Show Read
     Route::get('/equipment/show/update/{id}', [EquipmentController::class, 'showUpdate']); //? Show Update
     Route::post('/equipment/search', [EquipmentController::class, 'search']); //? Paginate

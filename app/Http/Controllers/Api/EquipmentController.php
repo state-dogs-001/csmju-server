@@ -45,6 +45,44 @@ class EquipmentController extends Controller
         return response()->json($equipments, 200);
     }
 
+    //? Index (All)
+    public function indexAll()
+    {
+        $equipments = Equipment::join('equipment_status', 'equipment_status.id', '=', 'equipment.status_id')
+            ->join('personnels', 'personnels.id', '=', 'equipment.personnel_id')
+            ->join('rooms', 'rooms.room_id', '=', 'equipment.room_id')
+            ->select(
+                'equipment.id',
+                'equipment.equip_id',
+                'equipment.serial_number',
+                'equipment.name',
+                'equipment.model',
+                'equipment.detail',
+                'equipment.price',
+                'equipment.quantity',
+                'equipment.main_type',
+                'equipment.sub_type',
+                'equipment.purchase_date',
+                'equipment.purchase_from',
+                'equipment.budget',
+                'equipment.note',
+                'equipment_status.status',
+                'personnels.name_title',
+                'personnels.name_th',
+                'rooms.room_id',
+                'rooms.room_name_th',
+                'equipment.is_del'
+            )
+            ->where('equipment.is_del', false)
+            ->orderBy('equipment.purchase_date', 'desc')
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $equipments,
+        ], 200);
+    }
+
     //? Show For Read
     public function show($id)
     {
@@ -114,7 +152,7 @@ class EquipmentController extends Controller
         $request->validate([
             'search' => 'required'
         ]);
-        
+
         //? Use Request because some keyword has '/' it cannot use with api
         $keyword = $request->search;
 

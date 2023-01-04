@@ -16,7 +16,7 @@ class UserTokenSeeder extends Seeder
     public function run()
     {
         $access_tokens = array(
-            array('id' => '1', 'tokenable_type' => 'App\\Models\\User', 'tokenable_id' => '2', 'name' => 'secret', 'token' => 'c17ca423b3f7db69ab8011546f79b1d81fbbc594521d27767439133f5d9edbc2', 'abilities' => '["*"]', 'last_used_at' => '2022-10-06 21:26:11', 'expires_at' => NULL, 'created_at' => '2022-09-26 18:04:16', 'updated_at' => '2022-10-06 21:26:11')
+            array('id' => '1', 'tokenable_type' => 'App\\Models\\User', 'tokenable_id' => '1', 'name' => 'anonymous58', 'token' => '0e001af967e586e461b25259fd7f70d1cda1515136beefa0f373efe59d07bfcb', 'abilities' => '["*"]', 'last_used_at' => '2022-12-28 15:50:28', 'expires_at' => NULL, 'created_at' => '2022-12-28 15:49:36', 'updated_at' => '2022-12-28 15:50:28')
         );
 
         foreach ($access_tokens as $token) {

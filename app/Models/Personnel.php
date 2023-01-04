@@ -36,6 +36,12 @@ class Personnel extends Model
         'updated_at',
     ];
 
+    //? User relationship
+    public function user()
+    {
+        return $this->hasOne(User::class);
+    }
+
     public function getImageProfileAttribute($value)
     {
         if ($value) {
