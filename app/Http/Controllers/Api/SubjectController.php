@@ -9,7 +9,7 @@ use App\Models\Subject;
 
 class SubjectController extends Controller
 {
-    //? Show all subjects
+    //? subjects pagination
     public function index()
     {
         $subjects = Subject::where('is_del', false)
@@ -17,6 +17,19 @@ class SubjectController extends Controller
             ->paginate(20);
 
         return response()->json($subjects, 200);
+    }
+
+    //? subjects all
+    public function subjectsAll()
+    {
+        $subjects = Subject::where('is_del', false)
+            ->orderBy('id', 'desc')
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $subjects
+        ], 200);
     }
 
     //? Show a subject

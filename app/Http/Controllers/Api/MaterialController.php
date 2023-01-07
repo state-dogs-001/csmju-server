@@ -32,6 +32,21 @@ class MaterialController extends Controller
         return response()->json($materials, 200);
     }
 
+    //? Materials in stock
+    public function materialsInStock()
+    {
+        $materials = Material::where('is_del', false)
+            ->where('status', true)
+            ->where('quantity', '>', 0)
+            ->orderBy('id', 'desc')
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $materials
+        ], 200);
+    }
+
     //? Show material is in stock
     public function show($id)
     {

@@ -30,7 +30,7 @@ Route::post('/auth/signup', [AuthController::class, 'signup']);
 Route::post('/auth/signin', [AuthController::class, 'signin']);
 Route::get('/auth/admin-check/{citizen_id}', [AuthController::class, 'adminCheck']);
 
-//? Metarial disbursal route (เบิกวัสดุ)
+//? Material disbursal route (เบิกวัสดุ)
 Route::get('/materials/disbursals', [MaterialDisbursalController::class, 'index']); //? Paginate
 Route::get('/material/disbursal/search/{keyword}', [MaterialDisbursalController::class, 'search']); //? Paginate
 Route::get('/material/disbursal/filter/{citizen_id}', [MaterialDisbursalController::class, 'filterByCitizenId']);
@@ -90,6 +90,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //? Subject route
     Route::get('/subjects', [SubjectController::class, 'index']); //? Paginate
+    Route::get('/subjects/all', [SubjectController::class, 'subjectsAll']); //? Not paginate
     Route::get('/subject/show/{id}', [SubjectController::class, 'show']);
     Route::post('/subject/new', [SubjectController::class, 'store']);
     Route::post('/subject/update/{id}', [SubjectController::class, 'update']);
@@ -233,6 +234,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/material/show/update/{id}', [MaterialController::class, 'showUpdate']); //? Show for update
     Route::get('/material/search/{keyword}', [MaterialController::class, 'search']); //? Paginate (Public)
     Route::get('/material/search/private/{keyword}', [MaterialController::class, 'searchPrivate']); //? Paginate (Private)
+    Route::get('/material/in-stock', [MaterialController::class, 'materialsInStock']); //? Not Paginate (public) show only in stock 
     Route::post('/material/new', [MaterialController::class, 'store']);
     Route::post('/material/update/{id}', [MaterialController::class, 'update']);
     Route::post('/material/delete/{id}', [MaterialController::class, 'delete']);
