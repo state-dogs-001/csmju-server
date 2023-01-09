@@ -36,7 +36,9 @@ class ActivityController extends Controller
     //? Activity All
     public function all()
     {
-        $activities = Activity::all();
+        $activities = Activity::where('is_show', true)
+            ->orderBy('id', 'desc')
+            ->get();
 
         return response()->json([
             'success' => true,
